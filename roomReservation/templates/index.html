@@ -1,48 +1,21 @@
-<!--extending our template-->
 {% extends 'base.html' %}
 
 {% block title %} Jumaic Conference Rooms {% endblock %}
 
 {% block content %}
 {% load static %}
+<div class="bg-image"></div>
 
-<div class="position-absolute top-50 start-50 translate-middle">
-    <div class="loginbox card bg-dark bg-gradient text-light">
-		<div class="card-body m-5">
-			<div class="panel-heading">
-				<h3 class="text-center font-weight-bold">LOGIN</h3>
-			</div><br>
-			<div class="panel-body">
-				<form accept-charset="UTF-8" role="form">
-				<fieldset>
-					<div class="form-group">
-						<input class="form-control" placeholder="Username" name="username" type="text">
-					</div><br>
-					<div class="form-group">
-						<input class="form-control" placeholder="Password" name="password" type="password" value="">
-					</div>
-					<div class="checkbox">
-						<label>
-							<input name="remember" type="checkbox" value="Remember Me"> Remember Me
-						</label>
-					</div><br>
-					<input class="btn btn-lg btn-success btn-block position-absolute top-100 start-50 translate-middle" type="submit" value="Login">
-				</fieldset>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+
+
+
 
 <style>
-	.loginbox{
-		border-radius: 25%;
-	}
-	body {
-		background-image: url("{% static 'images/room.jpg' %}");
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-		background-size: cover;
-	}
-</style>	
+body {
+    background-image: url("{% static 'images/room.jpg' %}");
+    background-position: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+</style>
 {% endblock %}
