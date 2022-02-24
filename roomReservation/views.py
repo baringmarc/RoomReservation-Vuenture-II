@@ -9,3 +9,11 @@ class IndexView(View):
 class LoginView(View):
     def get(self, request):
         return render(request, 'login.html')
+
+class ContactUsView(View):
+    def get(self, request):
+        return render(request, 'contactUs.html')
+
+class AboutUsView(View):
+    def get(self, request):
+        return render(request, 'aboutUs.html')
