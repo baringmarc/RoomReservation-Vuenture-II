@@ -17,3 +17,11 @@ class ContactUsView(View):
 class AboutUsView(View):
     def get(self, request):
         return render(request, 'aboutUs.html')
+
+class RoomsView(View):
+    def get(self, request):
+        return render(request, 'rooms.html')
+
+class ReservationsView(View):
+    def get(self, request):
+        return render(request, 'reservations.html')

@@ -1,0 +1,84 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Jumaic Conference Rooms {% endblock %}
+
+{% block content %}
+  
+      {% include 'sideMenu.html' %}
+    
+    
+        <!-- BODY -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Conference Rooms</h1>
+          </div>
+
+          <div class="container">
+            <div class="row align-items-start">
+                <div class="col">
+
+          <div class="card mb-3" style="max-width: 350px;">
+            <div class="row g-0">
+              <div>
+                <img src="{% static 'images/room2.jpg' %}" class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">Room 1</h5>
+                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card mb-3" style="max-width: 350px;">
+            <div class="row g-0">
+              <div>
+                <img src="{% static 'images/room3.jpg' %}" class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">Room 2</h5>
+                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        </div>
+    </div>
+
+    <div class="card flex-row flex-wrap">
+        <div class="card-header border-0">
+            <img src="//placehold.it/200" alt="">
+        </div>
+        <div class="card-block px-2">
+            <h4 class="card-title">Title</h4>
+            <p class="card-text">Description</p>
+            <a href="#" class="btn btn-primary">BUTTON</a>
+        </div>
+        <div class="w-100"></div>
+        <div class="card-footer w-100 text-muted">
+            FOOTER
+        </div>
+    </div>
+    
+  </div>
+
+  
+
+
+        </main>
+        <!--BODY-->
+        
+      </div>
+    </div>
+
+    {% endblock %}
+
