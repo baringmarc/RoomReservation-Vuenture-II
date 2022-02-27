@@ -11,29 +11,71 @@
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
   <div class="card">
-    <div class="card-header flex-wrap flex-md-nowrap border-bottom bg-danger bg-gradient">
+    <div class="card-header flex-wrap flex-md-nowrap border-bottom bg-dark">
       <h1 class="h2 text-light" style="font-weight: bold;">Conference Rooms</h1>
     </div>
 
     <div class="card-body border">
-      <div class="d-flex flex-column align-items-center">
+      <div class="container-fluid">
+        <div class="row">
         
-        <div class="card mb-3 rounded-pill" style="max-width: 620px; background-image: url({% static 'images/start1.JPG' %})">
-          <div class="row no-gutters">
-            <div class="col-md-3 ">
-              <img src="{% static 'images/room.jpg' %}" class="card-img rounded-circle">
-            </div>
-            <div class="col-md-9">
-              <div class="card-body">
-                <h4 class="card-title" style="font-weight: bold;">Room 1</h4>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+          <div class="roomItem card mb-3 border-3 rounded">
+            <div class="d-flex flex-row align-items-center">
+              <div class="col-md-4">
+                <img src="{% static 'images/room1.jpg'%}" class="img-fluid rounded-pill">
+              </div>
+              <div class="col-md-5">
+                <div class="card-body">
+
+                  <div class="d-flex flex-row">
+                    <h5 class="card-title pe-3" style="font-weight:bold;">
+                      Room 1 
+                      <span class="badge bg-secondary">Type A</span>
+                    </h5>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-1">
+                      <div>
+                      <p class="card-text pe-3" style="font-weight:bold;">Price:</p>
+                      </div>
+
+                      <div>
+                      <p class="card-text">Morning
+                      <span class="badge rounded-pill bg-success">₱500</span>
+                      </p>
+                      </div>
+
+                      <div>
+                      <p class="card-text">Afternoon
+                      <span class="badge rounded-pill bg-danger">₱600</span>
+                      </p>
+                      </div>
+
+                      <div>
+                      <p class="card-text">Evening
+                        <span class="badge rounded-pill bg-primary">₱700</span>
+                      </p>
+                      </div>
+                  </div>
+                  
+                  <div class="d-flex flex-row">
+                  <p class="card-text pe-3" style="font-weight:bold;">Capacity:
+                  <span class="badge rounded-pill bg-primary bg-info">15</span>
+                  </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3 border">
+                <div class="d-grid">
+                  <button class="btn btn-success bg-gradient btn-block">Book</button>
+                  <button class="btn btn-danger bg-gradient btn-block">Edit</button>
+                </div>    
               </div>
             </div>
           </div>
-        </div>
 
-   
+        </div>
       </div>  
     </div>
   </div>
@@ -45,6 +87,12 @@
   .card-img{
     height: 176px;
     width: 170px;
+  }
+  .room{
+    background-color: #dfe4ea;
+  }
+  .roomItem:hover {
+    border-color: #feca57;
   }
 </style>
 {% endblock %}

@@ -1,9 +1,13 @@
 {% load static %}
 
 <header class="site-header">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
         <div class="container-fluid">
-                <a class="navbar-brand" href="{% url 'index-view' %}">Jumaic Conference Rooms</a>
+                
+                    <a href="{% url 'index-view' %}" >
+                        <img class="nav-item" src="{% static 'images/logo_header-1.png' %}" style="max-width: 150px;"/>
+                    </a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
