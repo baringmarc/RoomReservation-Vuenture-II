@@ -5,19 +5,26 @@
 {% block content %}
 {% load static %}
 
-<div class="d-flex flex-column position-absolute top-50 start-50 translate-middle" style="max-width: 25%;">
-    <div>
-        <img class="img-fluid" src="{% static 'images/logo_w_name.png' %}">
-    </div>
-    <div class="bg-dark rounded-pill">
-        <div class="text-center text-light font-weight-italic">
-            <h3><i>"Providing quality rooms to discuss in with your associates."</i></h3>
+<div class="d-flex flex-column position-absolute top-50 start-50 translate-middle p-2" style="max-width: 30%;">
+    
+        <div>
+            <img class="img-fluid" src="{% static 'images/logo_w_name.png' %}">
         </div>
-        <div class="text-center">
-            <a class="text-center text-light" href="{% url 'aboutUs-view'%}" style="text-decoration: none;">Learn more...</a>
-        </div>
-    </div>
-</div>    
+
+        <div class="bg-dark rounded-pill">
+            <div class = "p-2">
+            <div class="text-center text-light font-weight-italic">
+                <h3><i>"Providing quality rooms to discuss with your associates."</i></h3>
+            </div>
+            <div class="text-center">
+                <a class="text-center text-light" href="{% url 'aboutUs-view'%}" style="text-decoration: none;">Learn more...</a>
+            </div>
+            </div>
+       
+</div> 
+
+
+</div>
 
 
 
@@ -26,7 +33,7 @@ html{
     height: 100%;
 }
 body {
-    background-image: url("{% static 'images/room.jpg' %}");
+    background-image: url("{% static 'images/rooms.jpg' %}");
     background-position: fixed;
     background-repeat: no-repeat;
     background-size: cover;
