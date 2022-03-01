@@ -1,19 +1,49 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 # Create your models here.
+    
+
 class ConferenceRoom(models.Model):
     name = models.CharField(max_length = 30, null=True, blank=True)
     type = models.CharField(max_length = 30, null=True, blank=True)
-    timeSlot = models.TimeField
-    fee = models.IntegerField()
+    capacity = models.IntegerField(null=True, blank=True)
+    morningFee = models.FloatField(null=True, blank=True)
+    afternoonFee = models.FloatField(null=True, blank=True)
+    eveningFee = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Applicant(models.Model):
-    name = models.CharField(max_length = 50, null=True, blank=True)
+    firstName = models.CharField(max_length = 50, null=True, blank=True)
+    lastName = models.CharField(max_length = 50, null=True, blank=True)
     address = models.CharField(max_length = 50, null=True, blank=True)
-    phoneNumber = models.CharField(max_length = 10, null=True, blank=True)
+    phoneNumber = models.CharField(max_length = 11, null=True, blank=True)
+
+    def __str__(self):
+        return self.firstName + self.lastName
+
+class TimeSlot(models.Model):
+    name = models.CharField(max_length = 50, null=True, blank=True)
+    morning = models.BooleanField(default=False)
+    afternoon = models.BooleanField(default=False)
+    evening = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
 
 class Reservation(models.Model):
-    conferenceRoom = models.ForeignKey(ConferenceRoom, on_delete = models.CASCADE)
+    room = models.ForeignKey(ConferenceRoom, on_delete = models.CASCADE)
     applicant = models.ForeignKey(Applicant, on_delete = models.CASCADE)
-    date = models.DateField(null=True, blank=True)
+    dateOfUse = models.DateField(null=True, blank=True)
+    dateReserved = models.DateField(null=True, blank=True)
+    paid = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
+    timeSlot = models.ForeignKey(TimeSlot, on_delete = models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.room.name + " by "+ self.applicant.firstName + " " + self.applicant.lastName
 
