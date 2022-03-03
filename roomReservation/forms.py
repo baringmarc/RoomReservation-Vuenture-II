@@ -1,6 +1,10 @@
 from django import forms
+from .models import ConferenceRoom
 
-class addApplicant(forms.Form):
-    name = forms.CharField(max_length = 30, null=True, blank=True)
-    address = forms.CharField(max_length = 30, null=True, blank=True)
-    phoneNumber = forms.CharField(max_length = 50, null=True, blank=True)
+
+class ConferenceRoomForm(forms.ModelForm):
+    class Meta:
+        model = ConferenceRoom
+        fields = ['name', 'type', 'capacity','morningFee', 'afternoonFee', 'eveningFee']
+
+        

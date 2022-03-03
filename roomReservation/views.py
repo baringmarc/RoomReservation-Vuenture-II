@@ -1,5 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
+from .forms import *
+from .models import *
+
 # Create your views here.
 
 class IndexView(View):
@@ -25,3 +28,34 @@ class RoomsView(View):
 class ReservationsView(View):
     def get(self, request):
         return render(request, 'reservations.html')
+
+class AdminReservationsView(View):
+    def get(self, request):
+        return render(request, 'adminReservations.html')
+
+class AddRoomView(View):
+    def get(self, request):
+        return render(request, 'addRoom.html')
+
+class AdminPageView(View):
+    def get(self, request):
+        form = ConferenceRoomForm(request.POST)
+        conferenceRooms = ConferenceRoom.objects.all()
+        context = {'form': form,
+                    'rooms': conferenceRooms}
+        return render(request, 'adminPage.html', context)
+    
+    def post(self, request):
+        if 'deleteBtn' in request.POST:
+            roomid = request.POST.get('roomID')
+            ConferenceRoom.objects.filter(id=roomid).delete() 
+            print('Room deleted')
+            return redirect('adminPage-view')
+
+        else:
+            form = ConferenceRoomForm(request.POST) 
+            if form.is_valid():
+                form.save()
+                return redirect('adminPage-view')
+        
+        return render(request, 'adminPage.html', {'form': form})

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Jumaic Conference Rooms {% endblock %}
+
+{% block content %}
+  
+    
+    
+<!-- BODY -->
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="card">
+    <div class="card-header flex-wrap flex-md-nowrap border-bottom bg-dark">
+      <h1 class="h2 text-light" style="font-weight: bold;">Admin Conference Rooms</h1>
+    </div>
+
+    <form>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" >
+
+          <label for="type">Type</label>
+          <input type="text" class="form-control" id="type" >
+
+          <label for="capacity">Capacity</label>
+          <input type="number" class="form-control" id="capacity" >
+
+          <label for="morning">Morning Fee</label>
+          <input type="number" class="form-control" id="morning" >
+          
+          <label for="afternoon">Afternoon Fee</label>
+          <input type="number" class="form-control" id="afternoon" >
+          
+          <label for="morning">Evening Fee</label>
+          <input type="number" class="form-control" id="evening" >
+
+        </div>
+        <button type="submit" class="btn btn-primary">Create room</button>
+      </form>
+    
+
+</main>
+        <!--BODY-->
+
+<style>
+  .card-img{
+    height: 176px;
+    width: 170px;
+  }
+  .room{
+    background-color: #dfe4ea;
+  }
+  .roomItem:hover {
+    border-color: #feca57;
+  }
+</style>
+{% endblock %}
+

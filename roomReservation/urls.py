@@ -9,4 +9,7 @@ urlpatterns = [
     path('aboutUs/', AboutUsView.as_view(), name='aboutUs-view'),
     path('rooms/', RoomsView.as_view(), name='rooms-view'),
     path('reservations/', ReservationsView.as_view(), name='reservations-view'),
+    path('adminPage/', AdminPageView.as_view(), name='adminPage-view'),
+    path('adminReservations/', AdminReservationsView.as_view(), name='adminReservations-view'),
+    path('addRoom/', AddRoomView.as_view(), name='addRoom-view'),
 ]
