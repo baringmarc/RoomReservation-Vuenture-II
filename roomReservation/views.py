@@ -51,6 +51,22 @@ class AdminPageView(View):
             ConferenceRoom.objects.filter(id=roomid).delete() 
             print('Room deleted')
             return redirect('adminPage-view')
+        
+        elif 'editBtn' in request.POST:
+            roomId = request.POST.get('roomID')
+            roomName = request.POST.get('roomName')
+            roomType = request.POST.get('roomType')
+            roomCapa = request.POST.get('roomCapacity')
+            roomMFee = request.POST.get('roomMFee')
+            roomAFee = request.POST.get('roomAFee')
+            roomEFee = request.POST.get('roomEFee')
+            
+            ConferenceRoom.objects.filter(id = roomId).update(
+                name = roomName, type = roomType, capacity = roomCapa,
+                morningFee = roomMFee, afternoonFee = roomAFee,
+                eveningFee = roomEFee
+            )
+            return redirect('adminPage-view')
 
         else:
             form = ConferenceRoomForm(request.POST) 
