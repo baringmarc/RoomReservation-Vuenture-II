@@ -2,16 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
 from .forms import *
 from .models import *
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
 class IndexView(View):
     def get(self, request):
         return render(request, 'index.html')
-
-class LoginView(View):
-    def get(self, request):
-        return render(request, 'login.html')
 
 class ContactUsView(View):
     def get(self, request):
@@ -21,23 +18,25 @@ class AboutUsView(View):
     def get(self, request):
         return render(request, 'aboutUs.html')
 
-class RoomsView(View):
+class RoomsView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'rooms.html')
+        conferenceRooms = ConferenceRoom.objects.all()
+        context = {'rooms': conferenceRooms}
+        return render(request, 'rooms.html', context)
 
-class ReservationsView(View):
+class ReservationsView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'reservations.html')
 
-class AdminReservationsView(View):
+class AdminReservationsView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'adminReservations.html')
 
-class AddRoomView(View):
+class AddRoomView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'addRoom.html')
 
-class AdminPageView(View):
+class AdminPageView(LoginRequiredMixin, View):
     def get(self, request):
         form = ConferenceRoomForm(request.POST)
         conferenceRooms = ConferenceRoom.objects.all()

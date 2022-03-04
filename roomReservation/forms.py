@@ -7,4 +7,5 @@ class ConferenceRoomForm(forms.ModelForm):
         model = ConferenceRoom
         fields = ['name', 'type', 'capacity','morningFee', 'afternoonFee', 'eveningFee']
 
+
         
