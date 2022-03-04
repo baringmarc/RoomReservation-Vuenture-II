@@ -4,7 +4,7 @@
 
 {% block content %}
 {% load static %}
-{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
 <div class="position-absolute top-50 start-50 translate-middle">
     <div class="loginbox card bg-dark bg-gradient">
 		<div class="card-body m-5">
@@ -36,6 +36,17 @@
 		background-position: fixed;
 		background-repeat: no-repeat;
 		background-size: cover;
+	}
+	.asteriskField {
+    display: none;
+	}
+	textarea:focus {
+		-moz-box-shadow: none !important;
+		-webkit-box-shadow: none !important;
+		box-shadow: none !important;
+		border-bottom: 1px solid #D32F2F !important;
+		outline-width: 0;
+		font-weight: 400
 	}
 </style>	
 {% endblock %}

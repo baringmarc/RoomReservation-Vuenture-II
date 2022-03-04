@@ -8,7 +8,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class IndexView(View):
     def get(self, request):
-        return render(request, 'index.html')
+        if request.user.is_authenticated:
+            return redirect('rooms-view')
+        else:
+            return render(request, 'index.html')
 
 class ContactUsView(View):
     def get(self, request):
@@ -18,38 +21,26 @@ class AboutUsView(View):
     def get(self, request):
         return render(request, 'aboutUs.html')
 
-class RoomsView(LoginRequiredMixin, View):
-    def get(self, request):
-        conferenceRooms = ConferenceRoom.objects.all()
-        context = {'rooms': conferenceRooms}
-        return render(request, 'rooms.html', context)
-
 class ReservationsView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'reservations.html')
 
-class AdminReservationsView(LoginRequiredMixin, View):
-    def get(self, request):
-        return render(request, 'adminReservations.html')
-
-class AddRoomView(LoginRequiredMixin, View):
-    def get(self, request):
-        return render(request, 'addRoom.html')
-
-class AdminPageView(LoginRequiredMixin, View):
+class RoomsView(LoginRequiredMixin, View):
     def get(self, request):
         form = ConferenceRoomForm(request.POST)
         conferenceRooms = ConferenceRoom.objects.all()
+        reservations = Reservation.objects.all()
         context = {'form': form,
-                    'rooms': conferenceRooms}
-        return render(request, 'adminPage.html', context)
+                    'rooms': conferenceRooms,
+                    'reservations': reservations}
+        return render(request, 'rooms.html', context)
     
     def post(self, request):
         if 'deleteBtn' in request.POST:
             roomid = request.POST.get('roomID')
             ConferenceRoom.objects.filter(id=roomid).delete() 
             print('Room deleted')
-            return redirect('adminPage-view')
+            return redirect('rooms-view')
         
         elif 'editBtn' in request.POST:
             roomId = request.POST.get('roomID')
@@ -65,12 +56,12 @@ class AdminPageView(LoginRequiredMixin, View):
                 morningFee = roomMFee, afternoonFee = roomAFee,
                 eveningFee = roomEFee
             )
-            return redirect('adminPage-view')
+            return redirect('rooms-view')
 
         else:
             form = ConferenceRoomForm(request.POST) 
             if form.is_valid():
                 form.save()
-                return redirect('adminPage-view')
+                return redirect('rooms-view')
         
-        return render(request, 'adminPage.html', {'form': form})
+        return render(request, 'rooms.html', {'form': form})

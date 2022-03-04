@@ -6,17 +6,48 @@
   
 {% include 'sideMenu.html' %}
     
-    
+{% load crispy_forms_filters %}
+
 <!-- BODY -->
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
   <div class="card">
     <div class="card-header flex-wrap flex-md-nowrap border-bottom bg-dark">
-      <h1 class="h2 text-light" style="font-weight: bold;">Conference Rooms</h1>
+      <div class="d-flex flex-row align-items-center justify-content-between">
+        <h2 class="text-light" style="font-weight: bold;">Conference Rooms</h2>
+        {% if user.is_superuser %}
+          <div class="">
+            <button type='submit' name='addBtn' class='btn btn-success' data-bs-toggle="modal" data-bs-target="#addRoomModal">Add Room</button>
+          </div>
+        {% endif %}  
+      </div>    
+      
+    </div>
+    <!-- Add Room Modal -->
+    <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Conference Room</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+          <form method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id = "addBtn" name = "addBtn">Add</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
     </div>
 
-    {% for r in rooms %}
     <div class="card-body border">
+      {% for r in rooms %}
       <div class="container-fluid">
         <div class="row">
         
@@ -37,16 +68,16 @@
 
                   <div class="d-flex flex-row align-items-center mb-1">
                       <div>
-                      <p class="card-text pe-3" style="font-weight:bold;">{{r.price}}</p>
+                      <p class="card-text pe-3" style="font-weight:bold;">Price:</p>
                       </div>
 
-                      <div>
+                      <div class="pe-1">
                       <p class="card-text">Morning
                       <span class="badge rounded-pill bg-success">{{r.morningFee}}</span>
                       </p>
                       </div>
 
-                      <div>
+                      <div class="pe-1">
                       <p class="card-text">Afternoon
                       <span class="badge rounded-pill bg-danger">{{r.afternoonFee}}</span>
                       </p>
@@ -60,42 +91,143 @@
                   </div>
                   
                   <div class="d-flex flex-row">
-                    <p class="card-text pe-3" style="font-weight:bold;">Capacity:
-                      <span class="badge rounded-pill bg-primary bg-info">{{r.capacity}}</span>
-                    </p>
+                  <p class="card-text pe-3" style="font-weight:bold;">Capacity:
+                  <span class="badge rounded-pill bg-success">{{r.capacity}}</span>
+                  </p>
                   </div>
                 </div>
               </div>
 
               <div class="col-md-3 border">
                 <div class="d-grid">
-                  <button class="btn btn-success bg-gradient btn-block">Book</button>
-                  <button class="btn btn-danger bg-gradient btn-block">Edit</button>
+                  <button class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#bookRoom-{{ r.id }}">Book</button>
+                  {% if user.is_superuser %}
+                  <button class="btn btn-danger btn-block" data-bs-toggle="modal" data-bs-target="#deleteRoom-{{ r.id }}">Delete</button>
+                  {% endif %}
                 </div>    
               </div>
+              <i data-bs-toggle="modal" data-bs-target="#editRoom-{{ r.id }}" 
+              class="bi bi-pencil-square position-absolute bottom-0 end-0 h5 me-2"></i>
             </div>
           </div>
-          
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deleteRoom-{{ r.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="POST">
+                      {% csrf_token %}
+                      <input type="text" name="roomID" value = {{ r.id }} id = "roomID"hidden>
+                    Are you sure you want to delete this conference room?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name = "deleteBtn">Delete</button>
+                  </div>
+                </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Edit Modal -->
+            <div class="modal fade" id="editRoom-{{ r.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="POST">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        {% csrf_token %} 
+                        <input type="hidden" name="roomID" value="{{ r.id }}" id="roomID"></input>
+                        <label class="col-form-label"  for="name">Name</label>
+                        <input type="text" class="form-control" value="{{ r.name }}" name="roomName" required></input>
+                        <label class="col-form-label"  for="name">Type</label>
+                        <input type="text" class="form-control" value="{{ r.type }}" name="roomType" required></input>
+                        <label class="col-form-label"  for="name">Capacity</label>
+                        <input type="number" class="form-control" value="{{ r.capacity }}" name="roomCapacity" required></input>
+                        <label class="col-form-label"  for="name">Morning Fee</label>
+                        <input type="number" class="form-control" value="{{ r.morningFee }}" name="roomMFee" required></input>
+                        <label class="col-form-label"  for="name">Afternoon Fee</label>
+                        <input type="number" class="form-control" value="{{ r.afternoonFee }}" name="roomAFee" required></input>
+                        <label class="col-form-label"  for="name">Evening Fee</label>
+                        <input type="number" class="form-control" value="{{ r.eveningFee }}" name="roomEFee" required></input>
+                        </input>
+                    </div>
+                  </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary" name="editBtn">Save Changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Book Room Modal -->
+            <div class="modal fade" id="bookRoom-{{ r.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="POST">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        {% csrf_token %} 
+                        <input type="hidden" name="roomID" value="{{ r.id }}" id="roomID"></input>
+                        <label class="col-form-label"  for="name">Name</label>
+                        <input type="text" class="form-control" value="{{ r.name }}" name="roomName" required></input>
+                        <label class="col-form-label"  for="name">Type</label>
+                        <input type="text" class="form-control" value="{{ r.type }}" name="roomType" required></input>
+                        <label class="col-form-label"  for="name">Capacity</label>
+                        <input type="number" class="form-control" value="{{ r.capacity }}" name="roomCapacity" required></input>
+                        <label class="col-form-label"  for="name">Morning Fee</label>
+                        <input type="number" class="form-control" value="{{ r.morningFee }}" name="roomMFee" required></input>
+                        <label class="col-form-label"  for="name">Afternoon Fee</label>
+                        <input type="number" class="form-control" value="{{ r.afternoonFee }}" name="roomAFee" required></input>
+                        <label class="col-form-label"  for="name">Evening Fee</label>
+                        <input type="number" class="form-control" value="{{ r.eveningFee }}" name="roomEFee" required></input>
+                        </input>
+                    </div>
+                  </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary" name="editBtn">Save Changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
         </div>
-      </div>  
+      </div> 
+      {% endfor %} 
     </div>
-    {% endfor %}
+    
   </div>
-  
 
 </main>
         <!--BODY-->
 
 <style>
-  .card-img{
-    height: 176px;
-    width: 170px;
-  }
   .room{
     background-color: #dfe4ea;
   }
   .roomItem:hover {
     border-color: #feca57;
+    background-color: #f1f2f6;
+  }
+  .bi-pencil-square:hover{
+    color: #feca57;
   }
 </style>
 {% endblock %}

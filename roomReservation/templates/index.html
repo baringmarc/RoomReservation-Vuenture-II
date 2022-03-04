@@ -1,31 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %} Jumaic Conference Rooms {% endblock %}
+{% block title %} JMJ Conference Rooms {% endblock %}
 
 {% block content %}
 {% load static %}
 
-<div class="d-flex flex-column position-absolute top-50 start-50 translate-middle p-2" style="max-width: 30%;">
-    
-        <div>
-            <img class="img-fluid" src="{% static 'images/logo_w_name.png' %}">
+<div class="container col-xxl-8 px-4 py-5">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+      <div class="col-10 col-sm-8 col-lg-6">
+        <img src="{% static 'images/logo_only.png' %}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+      </div>
+      <div class="col-lg-6">
+        <h1 class="display-5 fw-bold lh-1 mb-3">JMJ Conference Rooms</h1>
+        <p class="lead">Providing you quality conference rooms for you and your colleagues to discuss in.</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          <a type="btn btn-primary" class="btn btn-primary btn-lg px-4 me-md-2"
+          href="{% url 'aboutUs-view' %}">Learn More</a>
         </div>
-
-        <div class="bg-dark rounded-pill">
-            <div class = "p-2">
-            <div class="text-center text-light font-weight-italic">
-                <h3><i>"Providing quality rooms to discuss with your associates."</i></h3>
-            </div>
-            <div class="text-center">
-                <a class="text-center text-light" href="{% url 'aboutUs-view'%}" style="text-decoration: none;">Learn more...</a>
-            </div>
-            </div>
-       
-</div> 
-
-
-</div>
-
+      </div>
+    </div>
+  </div>
 
 
 <style>
