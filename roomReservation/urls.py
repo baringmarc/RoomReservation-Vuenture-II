@@ -11,4 +11,6 @@ urlpatterns = [
     path('reservations/', ReservationsView.as_view(), name='reservations-view'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html', redirect_authenticated_user=True), name='login-view'),
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html', next_page=None), name='logout-view'),
-]
+    path('users/', UsersView.as_view(), name='users-view'),
+    path('applicants/', ApplicantsView.as_view(), name='applicants-view'),
+]   

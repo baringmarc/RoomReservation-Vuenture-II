@@ -1,10 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 # Create your models here.
     
-
 class ConferenceRoom(models.Model):
     name = models.CharField(max_length = 30, null=True, blank=True)
     type = models.CharField(max_length = 30, null=True, blank=True)
@@ -26,14 +24,20 @@ class Applicant(models.Model):
         return self.firstName + self.lastName
 
 class TimeSlot(models.Model):
-    name = models.CharField(max_length = 50, null=True, blank=True)
     morning = models.BooleanField(default=False)
     afternoon = models.BooleanField(default=False)
     evening = models.BooleanField(default=False)
 
     def __str__(self):
+        name = ""
+        if self.morning == True:
+            name += "Morning"
+        if self.afternoon == True:
+            name += "Afternoon"
+        if self.evening == True:
+            name += "Evening"
+            
         return self.name
-
 
 class Reservation(models.Model):
     room = models.ForeignKey(ConferenceRoom, on_delete = models.CASCADE)
@@ -42,7 +46,7 @@ class Reservation(models.Model):
     dateReserved = models.DateField(null=True, blank=True)
     paid = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
-    timeSlot = models.ForeignKey(TimeSlot, on_delete = models.CASCADE, null=True, blank=True)
+    timeslot = models.ForeignKey(TimeSlot, on_delete = models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.room.name + " by "+ self.applicant.firstName + " " + self.applicant.lastName

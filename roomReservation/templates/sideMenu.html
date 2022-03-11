@@ -17,6 +17,20 @@
                   Reservations
                 </a>
               </li>
+              <li class="nav-item navitem applicant">
+                <a class="nav-link" href="{% url 'applicants-view' %}">
+                  <span data-feather="file"></span>
+                  Applicants
+                </a>
+              </li>
+              {% if user.is_authenticated and user.is_superuser%}
+              <li class="nav-item navitem users">
+                <a class="nav-link" href="{% url 'users-view' %}">
+                  <span data-feather="file"></span>
+                  Users
+                </a>
+              </li>
+              {% endif %}
           </div>
         </nav>
 
