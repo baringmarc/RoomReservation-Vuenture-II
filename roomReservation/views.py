@@ -39,8 +39,22 @@ class ReservationsView(LoginRequiredMixin, View):
 
         form = ReservationForm(request.POST)
         form2 = TimeslotForm(request.POST)
+        
+        if 'deleteBtn' in request.POST:
+            reservationID = request.POST.get('reservationID')
+            ConferenceRoom.objects.filter(id=reservationID).delete() 
+            return redirect('reservations-view')
 
-        if checkValid(form, form2):
+        elif 'editBtn' in request.POST:
+            if checkValid(form, form2):
+                if form.is_valid() and form2.is_valid():
+                    form2.save()
+                    timeslot_id = TimeSlot.objects.latest('id')
+                    form.instance.timeslot = timeslot_id
+                    form.save()
+                    return redirect('reservations-view')
+
+        elif checkValid(form, form2):
             if form.is_valid() and form2.is_valid():
                 form2.save()
                 timeslot_id = TimeSlot.objects.latest('id')

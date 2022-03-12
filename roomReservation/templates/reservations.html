@@ -135,12 +135,61 @@
               <div class="col-md-2">
                 <div class="d-grid">
                   <button class="btn btn-primary bg-gradient btn-block">Settled</button>
-                  <button class="btn btn-danger bg-gradient btn-block">Cancel</button>
-                  <button class="btn btn-success bg-gradient btn-block">Edit</button>
+                  <button class="btn btn-danger bg-gradient btn-block" data-bs-toggle="modal" data-bs-target="#deleteReservation-{{ reserve.id }}">Cancel</button>
+                  <button class="btn btn-success bg-gradient btn-block" data-bs-toggle="modal" data-bs-target="#editReservation-{{ reserve.id }}">Edit</button>
                 </div>    
               </div>
             </div>
           </div>
+
+          <!-- Delete Modal -->
+          <div class="modal fade" id="deleteReservation-{{ reserve.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Cancel Reservation</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="reservationID" value = {{ reserve.id }} id = "reservationID" hidden>
+                  Are you sure you want to cancel this reservation?!
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary" name = "deleteBtn">Delete</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Modal -->
+          <div class="modal fade" id="editReservation-{{ reserve.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Edit Reservation</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form method="POST">
+                    {% csrf_token %}
+                    
+                    {{form|crispy}}
+                    {{form2|crispy}}
+                    
+                </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="editBtn">Save Changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
         {% endfor %}
         </div>
       </div>  

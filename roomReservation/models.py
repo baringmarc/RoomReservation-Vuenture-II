@@ -53,6 +53,8 @@ class Reservation(models.Model):
     paid = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     timeslot = models.ForeignKey(TimeSlot, on_delete = models.CASCADE, null=True)
+    # fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
 
     def __str__(self):
         return self.room.name + " by "+ self.applicant.firstName + " " + self.applicant.lastName
