@@ -13,4 +13,5 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html', next_page=None), name='logout-view'),
     path('users/', UsersView.as_view(), name='users-view'),
     path('applicants/', ApplicantsView.as_view(), name='applicants-view'),
+    path('prices/', RoomPriceView.as_view(), name='price-view'),
 ]   

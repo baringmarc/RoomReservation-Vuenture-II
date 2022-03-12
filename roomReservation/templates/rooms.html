@@ -62,7 +62,7 @@
                   <div class="d-flex flex-row">
                     <h5 class="card-title pe-3" style="font-weight:bold;">
                       {{r.name}} 
-                      <span class="badge bg-secondary">{{r.type}}</span>
+                      <span class="badge bg-secondary">{{r.type.type}}</span>
                     </h5>
                   </div>
 
@@ -73,19 +73,19 @@
 
                       <div class="pe-1">
                       <p class="card-text">Morning
-                      <span class="badge rounded-pill bg-success">{{r.morningFee}}</span>
+                      <span class="badge rounded-pill bg-success">{{r.type.morning|floatformat:2}}</span>
                       </p>
                       </div>
 
                       <div class="pe-1">
                       <p class="card-text">Afternoon
-                      <span class="badge rounded-pill bg-danger">{{r.afternoonFee}}</span>
+                      <span class="badge rounded-pill bg-danger">{{r.type.afternoon|floatformat:2}}</span>
                       </p>
                       </div>
 
                       <div>
                       <p class="card-text">Evening
-                        <span class="badge rounded-pill bg-primary">{{r.eveningFee}}</span>
+                        <span class="badge rounded-pill bg-primary">{{r.type.evening|floatformat:2}}</span>
                       </p>
                       </div>
                   </div>
@@ -145,20 +145,18 @@
                     <form method="POST">
                       {% csrf_token %}
                       <div class="form-group">
-                        {% csrf_token %} 
-                        <input type="hidden" name="roomID" value="{{ r.id }}" id="roomID"></input>
+
+                        <input type="text" name="roomID" value = {{ r.id }} id = "roomID" hidden>
                         <label class="col-form-label"  for="name">Name</label>
                         <input type="text" class="form-control" value="{{ r.name }}" name="roomName" required></input>
                         <label class="col-form-label"  for="name">Type</label>
-                        <input type="text" class="form-control" value="{{ r.type }}" name="roomType" required></input>
+                        <select class="form-select" name="roomType" id="roomType">
+                        {% for p in type %}
+                          <option value='{{ p.id }}' {% if p.id == r.type.id%} selected {% endif %}>{{ p.type }}</option>
+                        {% endfor %}
+                        </select>
                         <label class="col-form-label"  for="name">Capacity</label>
                         <input type="number" class="form-control" value="{{ r.capacity }}" name="roomCapacity" required></input>
-                        <label class="col-form-label"  for="name">Morning Fee</label>
-                        <input type="number" class="form-control" value="{{ r.morningFee }}" name="roomMFee" required></input>
-                        <label class="col-form-label"  for="name">Afternoon Fee</label>
-                        <input type="number" class="form-control" value="{{ r.afternoonFee }}" name="roomAFee" required></input>
-                        <label class="col-form-label"  for="name">Evening Fee</label>
-                        <input type="number" class="form-control" value="{{ r.eveningFee }}" name="roomEFee" required></input>
                         </input>
                     </div>
                   </div>

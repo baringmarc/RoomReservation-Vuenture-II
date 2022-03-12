@@ -3,13 +3,19 @@ from django.contrib.auth.models import User
 
 # Create your models here.
     
+class RoomPrice(models.Model):
+    type = models.CharField(max_length=50)
+    morning = models.FloatField(null=True, default=0)
+    afternoon = models.FloatField(null=True, default=0)
+    evening = models.FloatField(null=True, default=0)
+    
+    def __str__(self):
+        return self.type
+
 class ConferenceRoom(models.Model):
     name = models.CharField(max_length = 30, null=True, blank=True)
-    type = models.CharField(max_length = 30, null=True, blank=True)
+    type = models.ForeignKey(RoomPrice, on_delete=models.CASCADE, null=True, blank=True)
     capacity = models.IntegerField(null=True, blank=True)
-    morningFee = models.FloatField(null=True, blank=True)
-    afternoonFee = models.FloatField(null=True, blank=True)
-    eveningFee = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -31,9 +37,9 @@ class TimeSlot(models.Model):
     def __str__(self):
         name = ""
         if self.morning == True:
-            name += "Morning"
+            name += "Morning "
         if self.afternoon == True:
-            name += "Afternoon"
+            name += "Afternoon "
         if self.evening == True:
             name += "Evening"
             

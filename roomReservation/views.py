@@ -29,34 +29,29 @@ class ReservationsView(LoginRequiredMixin, View):
 class RoomsView(LoginRequiredMixin, View):
     def get(self, request):
         form = ConferenceRoomForm(request.POST)
+        roomPrice = RoomPrice.objects.all()
         conferenceRooms = ConferenceRoom.objects.all()
         reservations = Reservation.objects.all()
-        context = {'form': form,
+        context = {'form': form, 'type': roomPrice,
                     'rooms': conferenceRooms,
-                    'reservations': reservations}
+                    'reservations': reservations }
         return render(request, 'rooms.html', context)
     
     def post(self, request):
         if 'deleteBtn' in request.POST:
             roomid = request.POST.get('roomID')
             ConferenceRoom.objects.filter(id=roomid).delete() 
-            print('Room deleted')
             return redirect('rooms-view')
         
         elif 'editBtn' in request.POST:
-            roomId = request.POST.get('roomID')
-            roomName = request.POST.get('roomName')
-            roomType = request.POST.get('roomType')
-            roomCapa = request.POST.get('roomCapacity')
-            roomMFee = request.POST.get('roomMFee')
-            roomAFee = request.POST.get('roomAFee')
-            roomEFee = request.POST.get('roomEFee')
-            
-            ConferenceRoom.objects.filter(id = roomId).update(
-                name = roomName, type = roomType, capacity = roomCapa,
-                morningFee = roomMFee, afternoonFee = roomAFee,
-                eveningFee = roomEFee
-            )
+            roomid = request.POST.get('roomID')
+            room_name = request.POST.get('roomName')
+            room_type = request.POST.get('roomType')
+            room_capacity = request.POST.get('roomCapacity')
+
+            ConferenceRoom.objects.filter(id=roomid).update(
+                name = room_name, type = room_type, 
+                capacity = room_capacity) 
             return redirect('rooms-view')
 
         else:
@@ -123,4 +118,33 @@ class ApplicantsView(LoginRequiredMixin, View):
         elif form.is_valid():
             form.save()
         return redirect('applicants-view')
+
+class RoomPriceView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = RoomPriceForm()
+        roomPrice = RoomPrice.objects.all()
+        return render(request, 'prices.html', { 'prices': roomPrice, 'form': form } )
+    
+    def post(self, request):
+
+        form = RoomPriceForm(request.POST)
+
+        if 'btnUpdate' in request.POST:
+            price_id = request.POST.get('priceId')
+            price_type = request.POST.get('priceType')
+            morning = request.POST.get('priceM')
+            afternoon = request.POST.get('priceA')
+            evening = request.POST.get('priceE')
+            
+            RoomPrice.objects.filter(id = price_id).update(
+                priceType = price_type, priceM = morning,
+                priceA = afternoon, priceE = evening)
+        
+        elif 'btnDelete' in request.POST:
+            price_id = request.POST.get('priceId')
+            RoomPrice.objects.filter(id = price_id).delete()
+
+        elif form.is_valid():
+            form.save()
+        return redirect('price-view')
     

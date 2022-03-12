@@ -11,6 +11,14 @@
                   Conference Rooms
                 </a>
               </li>
+              {% if user.is_authenticated and user.is_superuser%}
+              <li class="nav-item navitem price">
+                <a class="nav-link" href="{% url 'price-view' %}">
+                  <span data-feather="home"></span>
+                  Room Prices
+                </a>
+              </li>
+              {% endif %}
               <li class="nav-item navitem reserve">
                 <a class="nav-link" href="{% url 'reservations-view' %}">
                   <span data-feather="file"></span>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import ConferenceRoom, Applicant
+from .models import ConferenceRoom, Applicant, RoomPrice
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -14,18 +14,16 @@ class ApplicantForm(forms.ModelForm):
         fields = ['firstName', 'lastName', 'address', 'phoneNumber']
 
 class ConferenceRoomForm(forms.ModelForm):
+    type = forms.ModelChoiceField(queryset=RoomPrice.objects.all())
     class Meta:
         model = ConferenceRoom
-        fields = ['name', 'type', 'capacity','morningFee', 'afternoonFee', 'eveningFee']
+        fields = ['name', 'type', 'capacity']
 
-    def __init__(self, *args, **kwargs):
-        super(ConferenceRoomForm, self).__init__(*args, **kwargs)
-        self.fields['name'].required = True
-        self.fields['type'].required = True
-        self.fields['capacity'].required = True
-        self.fields['morningFee'].required = True
-        self.fields['afternoonFee'].required = True
-        self.fields['eveningFee'].required = True
+    # def __init__(self, *args, **kwargs):
+    #     super(ConferenceRoomForm, self).__init__(*args, **kwargs)
+    #     self.fields['name'].required = True
+    #     self.fields['type'].required = True
+    #     self.fields['capacity'].required = True
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
@@ -36,7 +34,11 @@ class UserRegistrationForm(UserCreationForm):
         model = User
         fields = ['username','email','first_name','last_name','password1','password2']
 
+class RoomPriceForm(forms.ModelForm):
 
+    class Meta:
+        model = RoomPrice
+        fields = ['type', 'morning', 'afternoon', 'evening']
 
 
         
