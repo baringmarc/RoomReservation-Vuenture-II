@@ -5,20 +5,58 @@
 {% block content %}
   
 {% include 'sideMenu.html' %}
-    
+{% load crispy_forms_filters %}   
     
 <!-- BODY -->
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
   <div class="card">
     <div class="card-header flex-wrap flex-md-nowrap border-bottom bg-dark">
-      <h1 class="h2 text-light" style="font-weight: bold;">Reservations</h1>
+      <div class="d-flex flex-row align-items-center justify-content-between">
+        <h2 class="text-light" style="font-weight: bold;">Reservations</h2>
+          <div>
+            <button type='submit' name='addBtn' class='btn btn-success' data-bs-toggle="modal" data-bs-target="#addReserveModal">Add Reservation</button>
+          </div> 
+      </div>    
+      
+    </div>
+
+    <!-- Add Reservation Modal -->
+    <div class="modal fade" id="addReserveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Reservation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+          <form method="POST">
+            {% csrf_token %}
+
+            {{form|crispy}}
+            {{form2|crispy}}
+
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id = "addBtn" name = "addBtn">Add</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
     </div>
 
     <div class="card-body border">
       <div class="container-fluid">
         <div class="row">
-        
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert {% if message.tags == 'error' %} alert-danger {% else %} alert-{{ message.tags }} {% endif %}">
+                  {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% for reserve in reservations %}
           <div class="reserveItem card mb-3 border-3 rounded">
             <div class="d-flex flex-row align-items-center">
               <div class="col-md-4">
@@ -30,12 +68,12 @@
                   <div class="d-flex flex-row">
                     <div>
                       <h5 class="card-title pe-3" style="font-weight:bold;">
-                        Room 1 
-                        <span class="badge bg-secondary">Type A</span>
+                        {{reserve.room.name}} 
+                        <span class="badge bg-secondary">{{reserve.room.type}} </span>
                       </h5>
                     </div>
                     <div>
-                      <p class="card-text" style="font-weight:bold;">ReserveID#1692</p>
+                      <p class="card-text" style="font-weight:bold;">ID#{{reserve.id}}</p>
                     </div>  
                   </div>
 
@@ -45,12 +83,21 @@
                     </div>
 
                     <div class="pe-1">
-                      <span class="badge rounded-pill bg-success pe-2">Morning</span>
+                      {% if reserve.timeslot.morning == True %}
+                        <span class="badge rounded-pill bg-success pe-2">Morning</span>
+                      {% endif %}
+                      {% if reserve.timeslot.afternoon == True %}
+                        <span class="badge rounded-pill bg-danger pe-2">Afternoon</span>
+                      {% endif %}
+                      {% if reserve.timeslot.evening == True %}
+                        <span class="badge rounded-pill bg-primary pe-2">Evening</span>
+                      {% endif %}
                     </div>
 
                     <div>
-                      <p class="card-text pe-1" style="font-weight:bold;">Reserved to:
-                        <span class="badge rounded-pill bg-danger">LitCo</span>
+                      <p class="card-text pe-1" style="font-weight:bold;">Reserved for:
+                        <span class="badge rounded-pill bg-secondary">{{ reserve.applicant.firstName }} 
+                          {{ reserve.applicant.lastName }}</span>
                       </p>
                     </div>
 
@@ -58,25 +105,29 @@
                   
                   <div class="d-flex flex-row">
                     <p class="card-text pe-1" style="font-weight:bold;">Reservation Date:
-                      <span class="badge rounded-pill bg-primary bg-secondary">3/1/2021</span>
+                      <span class="badge rounded-pill bg-primary bg-secondary">{{ reserve.dateOfUse }}</span>
                     </p>
                     
                     <p class="card-text pe-1" style="font-weight:bold;">Capacity:
-                      <span class="badge rounded-pill bg-primary bg-info">15</span>
+                      <span class="badge rounded-pill bg-primary bg-secondary">{{ reserve.room.capacity }}</span>
                     </p>
                   </div>
 
                   <div class="d-flex flex-row">
                     <p class="card-text pe-1" style="font-weight:bold;">Total Payment:
-                      <span class="badge rounded-pill bg-primary bg-success">₱500</span>
+                      <span class="badge rounded-pill bg-primary bg-success">
+                        
+                      </span>
                     </p>
                     
                     <p class="card-text pe-1" style="font-weight:bold;">Paid:
-                      <span class="badge rounded-pill bg-primary bg-danger">X</span>
+                      {% if reserve.paid == False %}  
+                        <span class="badge rounded-pill bg-primary bg-danger">X</span>
+                      {% else %}
+                        <span class="badge rounded-pill bg-primary bg-success">&#10003;</span>
+                      {% endif %}
                     </p>
                   </div>
-
-
 
                 </div>
               </div>
@@ -90,13 +141,14 @@
               </div>
             </div>
           </div>
-
+        {% endfor %}
         </div>
       </div>  
     </div>
   </div>
 
 </main>
+ 
         <!--BODY-->
 {% include 'footer.html' %}
 <style>

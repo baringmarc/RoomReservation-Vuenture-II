@@ -4,6 +4,9 @@ from .forms import *
 from .models import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+import datetime
+from .reserve import *
+from django.contrib import messages
 
 # Create your views here.
 
@@ -24,17 +27,41 @@ class AboutUsView(View):
 
 class ReservationsView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'reservations.html')
+        form = ReservationForm()
+        form2 = TimeslotForm()
+        reservations = Reservation.objects.all()
+
+        context = {'reservations': reservations,
+            'form': form, 'form2': form2}
+        return render(request, 'reservations.html', context)
+    
+    def post(self, request):
+
+        form = ReservationForm(request.POST)
+        form2 = TimeslotForm(request.POST)
+
+        if checkValid(form, form2):
+            if form.is_valid() and form2.is_valid():
+                form2.save()
+                timeslot_id = TimeSlot.objects.latest('id')
+                form.instance.timeslot = timeslot_id
+                form.save()
+                return redirect('reservations-view')
+        
+        else:
+            messages.error(request, 'Reservation not approved. Conflict with existing reservation.')
+            return redirect('reservations-view')
+            
+
 
 class RoomsView(LoginRequiredMixin, View):
     def get(self, request):
         form = ConferenceRoomForm(request.POST)
         roomPrice = RoomPrice.objects.all()
         conferenceRooms = ConferenceRoom.objects.all()
-        reservations = Reservation.objects.all()
+        
         context = {'form': form, 'type': roomPrice,
-                    'rooms': conferenceRooms,
-                    'reservations': reservations }
+                    'rooms': conferenceRooms}
         return render(request, 'rooms.html', context)
     
     def post(self, request):

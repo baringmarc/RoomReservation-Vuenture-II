@@ -1,33 +1,33 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+import datetime
 # Create your models here.
     
 class RoomPrice(models.Model):
-    type = models.CharField(max_length=50)
-    morning = models.FloatField(null=True, default=0)
-    afternoon = models.FloatField(null=True, default=0)
-    evening = models.FloatField(null=True, default=0)
+    type = models.CharField(max_length=50, null=True)
+    morning = models.FloatField(default=0)
+    afternoon = models.FloatField(default=0)
+    evening = models.FloatField(default=0)
     
     def __str__(self):
         return self.type
 
 class ConferenceRoom(models.Model):
-    name = models.CharField(max_length = 30, null=True, blank=True)
-    type = models.ForeignKey(RoomPrice, on_delete=models.CASCADE, null=True, blank=True)
-    capacity = models.IntegerField(null=True, blank=True)
+    name = models.CharField(max_length = 30, null=True)
+    type = models.ForeignKey(RoomPrice, on_delete=models.CASCADE, null=True)
+    capacity = models.IntegerField(null=True)
 
     def __str__(self):
         return self.name
 
 class Applicant(models.Model):
-    firstName = models.CharField(max_length = 50, null=True, blank=True)
-    lastName = models.CharField(max_length = 50, null=True, blank=True)
-    address = models.CharField(max_length = 50, null=True, blank=True)
-    phoneNumber = models.CharField(max_length = 11, null=True, blank=True)
+    firstName = models.CharField(max_length = 50, null=True)
+    lastName = models.CharField(max_length = 50, null=True)
+    address = models.CharField(max_length = 50, null=True)
+    phoneNumber = models.CharField(max_length = 11, null=True)
 
     def __str__(self):
-        return self.firstName + self.lastName
+        return self.firstName + " " + self.lastName
 
 class TimeSlot(models.Model):
     morning = models.BooleanField(default=False)
@@ -48,11 +48,11 @@ class TimeSlot(models.Model):
 class Reservation(models.Model):
     room = models.ForeignKey(ConferenceRoom, on_delete = models.CASCADE)
     applicant = models.ForeignKey(Applicant, on_delete = models.CASCADE)
-    dateOfUse = models.DateField(null=True, blank=True)
-    dateReserved = models.DateField(null=True, blank=True)
+    dateOfUse = models.DateField(null=True)
+    dateReserved = models.DateField(default=datetime.date.today())
     paid = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
-    timeslot = models.ForeignKey(TimeSlot, on_delete = models.CASCADE, null=True, blank=True)
+    timeslot = models.ForeignKey(TimeSlot, on_delete = models.CASCADE, null=True)
 
     def __str__(self):
         return self.room.name + " by "+ self.applicant.firstName + " " + self.applicant.lastName

@@ -1,5 +1,5 @@
 from django import forms
-from .models import ConferenceRoom, Applicant, RoomPrice
+from .models import ConferenceRoom, Applicant, RoomPrice, Reservation, TimeSlot
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -41,4 +41,18 @@ class RoomPriceForm(forms.ModelForm):
         fields = ['type', 'morning', 'afternoon', 'evening']
 
 
-        
+class ReservationForm (forms.ModelForm):
+
+    class Meta:
+        model = Reservation
+        fields = ['room', 'applicant', 'dateOfUse']
+        exclude = ['timeslot', 'dateReserved', 'paid', 'completed']
+        widgets = {
+            'dateOfUse': forms.DateInput(attrs={'type': 'date'}),
+        } 
+
+class TimeslotForm (forms.ModelForm):
+
+    class Meta:
+        model = TimeSlot
+        fields = ['morning', 'afternoon', 'evening']
