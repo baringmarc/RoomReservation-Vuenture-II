@@ -2,6 +2,7 @@ from django import forms
 from .models import ConferenceRoom, Applicant, RoomPrice, Reservation, TimeSlot
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from datetime import date
 
 class ApplicantForm(forms.ModelForm):
     firstName = forms.CharField(max_length = 50)
@@ -46,13 +47,22 @@ class ReservationForm (forms.ModelForm):
     class Meta:
         model = Reservation
         fields = ['room', 'applicant', 'dateOfUse']
-        exclude = ['timeslot', 'dateReserved', 'paid', 'completed']
+        exclude = ['timeslot', 'dateReserved', 'paid', 'completed', 'fee']
         widgets = {
             'dateOfUse': forms.DateInput(attrs={'type': 'date'}),
         } 
+
+    def __init__(self, *args, **kwargs):
+        super(ReservationForm, self).__init__(*args, **kwargs)
+        self.fields['dateOfUse'].widget.attrs.update({'min': date.today})
+        self.fields['dateOfUse'].label = "Date of Use"
+        self.fields['room'].label = "Select Room"
+        self.fields['applicant'].label = "Select Applicant"
 
 class TimeslotForm (forms.ModelForm):
 
     class Meta:
         model = TimeSlot
         fields = ['morning', 'afternoon', 'evening']
+        exclude = ['id']
+       

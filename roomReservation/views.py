@@ -30,9 +30,13 @@ class ReservationsView(LoginRequiredMixin, View):
         form = ReservationForm()
         form2 = TimeslotForm()
         reservations = Reservation.objects.all()
+        applicants = Applicant.objects.all()
+        rooms = ConferenceRoom.objects.all()
+        today = datetime.date.today()
 
         context = {'reservations': reservations,
-            'form': form, 'form2': form2}
+            'form': form, 'form2': form2, 'applicants': applicants,
+            'rooms': rooms, 'today': today}
         return render(request, 'reservations.html', context)
     
     def post(self, request):
@@ -40,31 +44,76 @@ class ReservationsView(LoginRequiredMixin, View):
         form = ReservationForm(request.POST)
         form2 = TimeslotForm(request.POST)
         
-        if 'deleteBtn' in request.POST:
-            reservationID = request.POST.get('reservationID')
-            ConferenceRoom.objects.filter(id=reservationID).delete() 
-            return redirect('reservations-view')
-
-        elif 'editBtn' in request.POST:
+        if form.is_valid() and form2.is_valid():
             if checkValid(form, form2):
-                if form.is_valid() and form2.is_valid():
-                    form2.save()
-                    timeslot_id = TimeSlot.objects.latest('id')
-                    form.instance.timeslot = timeslot_id
-                    form.save()
+
+                if not form2.instance.morning and not form2.instance.afternoon and not form2.instance.evening:
+                    messages.error(request, 'Reservation not added. Please select at least one timeslot.')
                     return redirect('reservations-view')
 
-        elif checkValid(form, form2):
-            if form.is_valid() and form2.is_valid():
                 form2.save()
                 timeslot_id = TimeSlot.objects.latest('id')
                 form.instance.timeslot = timeslot_id
+                form.instance.fee = calculateFee_1(form)
                 form.save()
+
+                messages.success(request, 'Reservation added.')
                 return redirect('reservations-view')
         
-        else:
-            messages.error(request, 'Reservation not approved. Conflict with existing reservation.')
+        elif 'deleteBtn' in request.POST:
+            reservationID = request.POST.get('reservationID')
+            timeslotID = request.POST.get('timeslotID')
+            Reservation.objects.filter(id=reservationID).delete()
+            TimeSlot.objects.filter(id=timeslotID).delete()
+            messages.warning(request, 'Reservation canceled.')
             return redirect('reservations-view')
+
+        elif 'payBtn' in request.POST:
+            reservationID = request.POST.get('reservationID')
+            Reservation.objects.filter(id=reservationID).update(paid="True") 
+            messages.success(request, 'Reservation recorded as paid.')
+            return redirect('reservations-view')
+        
+        elif 'editBtn' in request.POST:
+            form3 = {'reserveID': request.POST.get('reserveID'),
+            'roomID': request.POST.get('reserveRoom'),
+            'dateOfUse': request.POST.get('reserveDate'),
+            'applicantID': request.POST.get('reserveAppli')}
+            form4 = {'timeslotID': request.POST.get('timeslotID'),
+            'morning': request.POST.get('morning')=='on', 
+            'afternoon': request.POST.get('afternoon')=='on',
+            'evening': request.POST.get('evening')=='on'}
+
+            if not form4['morning'] and not form4['afternoon'] and not form4['evening']:
+                messages.error(request, 'Please select at least one timeslot.')
+                return redirect('reservations-view')
+
+            elif checkValidEdit(form3, form4):
+                reserveID = form3['reserveID']
+                reserveRoom = form3['roomID']
+                reserveDate = form3['dateOfUse']
+                reserveApplicant = form3['applicantID']
+
+                timeslotID = form4['timeslotID']
+                morning_new = form4['morning']
+                afternoon_new = form4['afternoon']
+                evening_new = form4['evening']
+                
+                TimeSlot.objects.filter(id=timeslotID).update(
+                    morning=morning_new, afternoon=afternoon_new,
+                    evening=evening_new)
+
+                fee_new = calculateFee_2(form3, form4)
+
+                Reservation.objects.filter(id=reserveID).update(
+                    room=reserveRoom, dateOfUse=reserveDate,
+                    applicant=reserveApplicant, fee=fee_new)
+
+                messages.success(request, 'Reservation successfully updated.')
+                return redirect('reservations-view')    
+    
+        messages.error(request, 'Reservation not approved. Conflict with existing reservation.')
+        return redirect('reservations-view')
             
 
 
@@ -81,7 +130,8 @@ class RoomsView(LoginRequiredMixin, View):
     def post(self, request):
         if 'deleteBtn' in request.POST:
             roomid = request.POST.get('roomID')
-            ConferenceRoom.objects.filter(id=roomid).delete() 
+            ConferenceRoom.objects.filter(id=roomid).delete()
+            messages.warning(request, 'Room removed.') 
             return redirect('rooms-view')
         
         elif 'editBtn' in request.POST:
@@ -93,12 +143,14 @@ class RoomsView(LoginRequiredMixin, View):
             ConferenceRoom.objects.filter(id=roomid).update(
                 name = room_name, type = room_type, 
                 capacity = room_capacity) 
+            messages.success(request, 'Room successfully updated.')
             return redirect('rooms-view')
 
         else:
             form = ConferenceRoomForm(request.POST) 
             if form.is_valid():
                 form.save()
+                messages.success(request, 'Room successfully added.')
                 return redirect('rooms-view')
         
         return render(request, 'rooms.html', {'form': form})
@@ -151,13 +203,16 @@ class ApplicantsView(LoginRequiredMixin, View):
             Applicant.objects.filter(id = applicant_id).update(
                     firstName = first_name, lastName = last_name, 
                     address = address, phoneNumber = phone_number)
+            messages.success(request, 'Applicant successfuly updated.')
         
         elif 'btnDelete' in request.POST:
             applicant_id = request.POST.get('applicantId')
             Applicant.objects.filter(id = applicant_id).delete()
+            messages.warning(request, 'Applicant deleted.')
 
         elif form.is_valid():
             form.save()
+            messages.success(request, 'Applicant successfully added.')
         return redirect('applicants-view')
 
 class RoomPriceView(LoginRequiredMixin, View):
@@ -180,12 +235,15 @@ class RoomPriceView(LoginRequiredMixin, View):
             RoomPrice.objects.filter(id = price_id).update(
                 priceType = price_type, priceM = morning,
                 priceA = afternoon, priceE = evening)
-        
+            messages.success(request, 'Room price type successfully updated.')
+
         elif 'btnDelete' in request.POST:
             price_id = request.POST.get('priceId')
             RoomPrice.objects.filter(id = price_id).delete()
+            messages.warning(request, 'Room price type removed.')
 
         elif form.is_valid():
             form.save()
+            messages.success(request, 'Room price type successfully added.')
         return redirect('price-view')
     

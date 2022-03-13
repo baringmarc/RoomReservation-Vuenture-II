@@ -100,7 +100,6 @@
 
               <div class="col-md-3 border">
                 <div class="d-grid">
-                  <button class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#bookRoom-{{ r.id }}">Book</button>
                   {% if user.is_superuser %}
                   <button class="btn btn-danger btn-block" data-bs-toggle="modal" data-bs-target="#deleteRoom-{{ r.id }}">Delete</button>
                   {% endif %}
