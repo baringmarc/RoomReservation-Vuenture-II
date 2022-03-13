@@ -246,4 +246,14 @@ class RoomPriceView(LoginRequiredMixin, View):
             form.save()
             messages.success(request, 'Room price type successfully added.')
         return redirect('price-view')
+
+class RoomLedgerView(View):
+    def get(self, request, id):
+        return render(request, 'roomLedger.html')
     
+    def get(self, request, id):
+        rID = id
+        reservation = Reservation.objects.filter(id = rID)
+        
+        context = { 'reservation': reservation}
+        return render(request, 'roomLedger.html', context)

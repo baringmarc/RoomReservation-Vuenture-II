@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} JMJ Conference Rooms {% endblock %}
+
+{% block content %}
+  
+{% include 'sideMenu.html' %}
+    
+{% load crispy_forms_filters %}   
+<!-- BODY -->
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="card">
+    <div class="card-header flex-wrap flex-md-nowrap border-bottom bg-dark">
+      <div class="d-flex flex-row align-items-center justify-content-between">
+        {% for res in reservation %}
+        <h2 class="text-light" style="font-weight: bold;">{{ res.room.name}}</h2>  
+      </div>    
+      
+    </div>
+    
+
+    <div class="card-body border">
+
+        <div class="table-responsive">
+          <table class="table table-striped table-sm" id="table_id">
+            <thead>
+              <tr>
+                <th scope="col">Reserved By</th>
+                <th scope="col">Type</th>
+                <th scope="col">Reservation Date</th>
+                <th scope="col">Time Slot(s)</th>
+                <th scope="col">Fee</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr>
+                <td>{{ res.applicant.firstName }} {{ res.applicant.lastName }}</td>
+                <td>{{ res.room.type }}</td>
+                <td>{{ res.dateReserved }}</td>
+                {% if res.timeslot.morning == True %}
+                    <td>Morning</td>
+                {% endif %}
+                {% if res.timeslot.afternoon == True %}
+                    <td>Afternoon</td>
+                {% endif %}
+                {% if res.timeslot.evening == True %}
+                    <td>Evening</td>
+                {% endif %}
+                <td> {{ res.fee }}</td>
+              </tr>
+  
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div> 
+    </div>
+  </div>
+  
+</main>
+
+{% include 'footer.html' %}
+<!--BODY-->
+
+<style>
+  .applicant{
+    background-color: #dfe4ea;
+  }
+</style>
+{% endblock %}
+

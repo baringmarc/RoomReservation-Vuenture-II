@@ -14,4 +14,5 @@ urlpatterns = [
     path('users/', UsersView.as_view(), name='users-view'),
     path('applicants/', ApplicantsView.as_view(), name='applicants-view'),
     path('prices/', RoomPriceView.as_view(), name='price-view'),
+    path('rooms/<int:id>/', RoomLedgerView.as_view(), name='ledger-view'),
 ]   
