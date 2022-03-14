@@ -11,10 +11,11 @@
 
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
   <div class="card">
+    
     <div class="card-header flex-wrap flex-md-nowrap border-bottom bg-dark">
       <div class="d-flex flex-row align-items-center justify-content-between">
         {% for res in reservation %}
-        <h2 class="text-light" style="font-weight: bold;">{{ res.room.name}}</h2>  
+        <h2 class="text-light" style="font-weight: bold;">{{res.room.name}}</h2>  
       </div>    
       
     </div>
@@ -67,7 +68,7 @@
 <!--BODY-->
 
 <style>
-  .applicant{
+  .room{
     background-color: #dfe4ea;
   }
 </style>

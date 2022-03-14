@@ -25,7 +25,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add A User</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Add a Room Type</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -93,13 +93,13 @@
                                
                                 <input type="hidden" name="priceID" value="{{ price.id }}" id="roomID"></input>
                                 <label class="col-form-label"  for="type">Type</label>
-                                <input type="text" class="form-control" value="{{ price.type}}" name="priceType" required></input>
+                                <input type="text" class="form-control" value="{{ price.type}}" name="priceType"  id="priceType" required></input>
                                 <label class="col-form-label"  for="name">Morning Fee</label>
-                                <input type="text" class="form-control" value="{{ price.morning }}" name="priceM" required></input>
+                                <input type="text" class="form-control" value="{{ price.morning }}" name="priceM"  id="priceM" required></input>
                                 <label class="col-form-label"  for="name">Afternoon Fee</label>
-                                <input type="number" class="form-control" value="{{ price.afternoon }}" name="priceA" required></input>
+                                <input type="number" class="form-control" value="{{ price.afternoon }}" name="priceA"  id="priceA" required></input>
                                 <label class="col-form-label"  for="name">Evening Fee</label>
-                                <input type="number" class="form-control" value="{{ price.evening }}" name="priceE" required></input>
+                                <input type="number" class="form-control" value="{{ price.evening }}" name="priceE"  name="priceE" required></input>
                                 </input>
                                
                             </div>

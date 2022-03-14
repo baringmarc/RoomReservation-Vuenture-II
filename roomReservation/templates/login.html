@@ -14,6 +14,7 @@
       <div class="col-md-10 mx-auto col-lg-5">
         <form class="p-4 p-md-5 border rounded-3 bg-light" method="post">
 			<h2><p class="text-center" style="font-weight: bold;">Login</p></h2>
+			<p class="text-center text-muted"><i>For employees only! </i></p>
 			{% csrf_token %}
 			{{form|crispy}}
 			<div class="d-grid mt-3">

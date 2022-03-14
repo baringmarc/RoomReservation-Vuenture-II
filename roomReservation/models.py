@@ -46,7 +46,7 @@ class TimeSlot(models.Model):
         return self.name
 
 class Reservation(models.Model):
-    room = models.ForeignKey(ConferenceRoom, on_delete = models.CASCADE)
+    room = models.ForeignKey(ConferenceRoom, on_delete = models.CASCADE, related_name= "room")
     applicant = models.ForeignKey(Applicant, on_delete = models.CASCADE)
     dateOfUse = models.DateField(null=True)
     dateReserved = models.DateField(default=datetime.date.today())

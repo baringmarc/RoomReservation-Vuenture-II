@@ -229,15 +229,16 @@ class RoomPriceView(LoginRequiredMixin, View):
         form = RoomPriceForm(request.POST)
 
         if 'btnUpdate' in request.POST:
-            price_id = request.POST.get('priceId')
+            price_id = request.POST.get('priceID')
             price_type = request.POST.get('priceType')
-            morning = request.POST.get('priceM')
-            afternoon = request.POST.get('priceA')
-            evening = request.POST.get('priceE')
+            pMorning = request.POST.get('priceM')
+            pAfternoon = request.POST.get('priceA')
+            pEvening = request.POST.get('priceE')
             
             RoomPrice.objects.filter(id = price_id).update(
-                priceType = price_type, priceM = morning,
-                priceA = afternoon, priceE = evening)
+                type = price_type, morning = pMorning,
+                afternoon = pAfternoon, evening = pEvening)
+
             messages.success(request, 'Room price type successfully updated.')
 
         elif 'btnDelete' in request.POST:
@@ -251,12 +252,10 @@ class RoomPriceView(LoginRequiredMixin, View):
         return redirect('price-view')
 
 class RoomLedgerView(View):
-    def get(self, request, id):
-        return render(request, 'roomLedger.html')
     
     def get(self, request, id):
         rID = id
-        reservation = Reservation.objects.filter(id = rID)
-        
+        reservation = Reservation.objects.filter(room__id = rID).all()
+        print(rID)
         context = { 'reservation': reservation}
         return render(request, 'roomLedger.html', context)
