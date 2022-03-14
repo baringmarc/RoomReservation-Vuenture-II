@@ -21,9 +21,10 @@ def checkValidEdit(form1, form2):
     if form1['reserveID'] and form1['roomID'] and form1['dateOfUse'] and form2['timeslotID']:
 
         reservations = Reservation.objects.filter(room__id = form1['roomID']).all()
+        
         for reservation in reservations: 
             if not reservation.timeslot.id == form2['timeslotID']:
-                if reservation.dateOfUse == form1['dateOfUse']:
+                if str(reservation.dateOfUse) == str(form1['dateOfUse']):
                     if reservation.timeslot.morning == True and form2['morning'] == True:
                         return False
                     elif reservation.timeslot.afternoon == True and form2['afternoon'] == True:
