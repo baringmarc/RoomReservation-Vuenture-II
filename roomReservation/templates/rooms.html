@@ -47,171 +47,197 @@
     </div>
 
     <div class="card-body border" >
-      {% for r in rooms %}
+
       <div class="container-fluid">
         <div class="row">
-        
-          <div class="roomItem card mb-3 border-3 rounded" >
-            <div class="d-flex flex-row align-items-center">
-              <div class="col-md-4">
-                <img src="{% static 'images/room1.jpg'%}" class="img-fluid rounded-pill">
-              </div>
-              <div class="col-md-5">
-                <div class="card-body">
 
-                  <div class="d-flex flex-row">
-                    <h5 class="card-title pe-3" style="font-weight:bold;" >
-                      <a href="{% url 'ledger-view' r.id %}"> {{r.name}} </a> 
-                      <span class="badge bg-secondary">{{r.type.type}}</span>
-                    </h5>
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert {% if message.tags == 'error' %} alert-danger {% else %} alert-{{ message.tags }} {% endif %}">
+                  {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <div class="table-responsive">
+            <table class="table table-striped table-sm" id="table_id">
+              <thead>
+                <tr>
+                  <th scope="col">Rooms</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                {% for r in rooms %}
+
+                  <tr>
+                  <td>
+                    <div class="roomItem card mb-3 border-3 rounded p-1" >
+                      <div class="d-flex flex-row align-items-center">
+                        <div class="col-md-4">
+                          <img src="{% static 'images/room1.jpg'%}" class="img-fluid rounded-pill">
+                        </div>
+                        <div class="col-md-5">
+                          <div class="card-body">
+
+                            <div class="d-flex flex-row">
+                              <h5 class="card-title pe-3" style="font-weight:bold;" >
+                                <a href="{% url 'ledger-view' r.id %}"> {{r.name}} </a> 
+                                <span class="badge bg-secondary">{{r.type.type}}</span>
+                              </h5>
+                            </div>
+
+                            <div class="d-flex flex-row align-items-center mb-1">
+                                <div>
+                                <p class="card-text pe-3" style="font-weight:bold;">Price:</p>
+                                </div>
+
+                                <div class="pe-1">
+                                <p class="card-text">Morning
+                                <span class="badge rounded-pill bg-success">{{r.type.morning|floatformat:2}}</span>
+                                </p>
+                                </div>
+
+                                <div class="pe-1">
+                                <p class="card-text">Afternoon
+                                <span class="badge rounded-pill bg-danger">{{r.type.afternoon|floatformat:2}}</span>
+                                </p>
+                                </div>
+
+                                <div>
+                                <p class="card-text">Evening
+                                  <span class="badge rounded-pill bg-primary">{{r.type.evening|floatformat:2}}</span>
+                                </p>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex flex-row">
+                            <p class="card-text pe-3" style="font-weight:bold;">Capacity:
+                            <span class="badge rounded-pill bg-success">{{r.capacity}}</span>
+                            </p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="col-md-3 border">
+                          <div class="d-grid">
+                            {% if user.is_superuser %}
+                            <button class="btn btn-danger btn-block" data-bs-toggle="modal" data-bs-target="#deleteRoom-{{ r.id }}">Delete</button>
+                            {% endif %}
+                          </div>    
+                        </div>
+                        <i data-bs-toggle="modal" data-bs-target="#editRoom-{{ r.id }}" 
+                        class="bi bi-pencil-square position-absolute bottom-0 end-0 h5 me-2"></i>
+                      </div>
+                    </div>
+                  </td>
+                  </tr>
+
+                  <!-- Delete Modal -->
+                  <div class="modal fade" id="deleteRoom-{{ r.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Delete Room</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="roomID" value = {{ r.id }} id = "roomID"hidden>
+                          Are you sure you want to delete this conference room?
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" name = "deleteBtn">Delete</button>
+                        </div>
+                      </form>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="d-flex flex-row align-items-center mb-1">
-                      <div>
-                      <p class="card-text pe-3" style="font-weight:bold;">Price:</p>
-                      </div>
+                  <!-- Edit Modal -->
+                  <div class="modal fade" id="editRoom-{{ r.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Edit Room</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
 
-                      <div class="pe-1">
-                      <p class="card-text">Morning
-                      <span class="badge rounded-pill bg-success">{{r.type.morning|floatformat:2}}</span>
-                      </p>
+                              <input type="text" name="roomID" value = {{ r.id }} id = "roomID" hidden>
+                              <label class="col-form-label"  for="name">Name</label>
+                              <input type="text" class="form-control" value="{{ r.name }}" name="roomName" required></input>
+                              <label class="col-form-label"  for="name">Type</label>
+                              <select class="form-select" name="roomType" id="roomType">
+                              {% for p in type %}
+                                <option value='{{ p.id }}' {% if p.id == r.type.id%} selected {% endif %}>{{ p.type }}</option>
+                              {% endfor %}
+                              </select>
+                              <label class="col-form-label"  for="name">Capacity</label>
+                              <input type="number" class="form-control" value="{{ r.capacity }}" name="roomCapacity" required></input>
+                              </input>
+                          </div>
+                        </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" name="editBtn">Save Changes</button>
+                          </div>
+                        </form>
                       </div>
-
-                      <div class="pe-1">
-                      <p class="card-text">Afternoon
-                      <span class="badge rounded-pill bg-danger">{{r.type.afternoon|floatformat:2}}</span>
-                      </p>
-                      </div>
-
-                      <div>
-                      <p class="card-text">Evening
-                        <span class="badge rounded-pill bg-primary">{{r.type.evening|floatformat:2}}</span>
-                      </p>
-                      </div>
+                    </div>
                   </div>
-                  
-                  <div class="d-flex flex-row">
-                  <p class="card-text pe-3" style="font-weight:bold;">Capacity:
-                  <span class="badge rounded-pill bg-success">{{r.capacity}}</span>
-                  </p>
+
+                  <!-- Book Room Modal -->
+                  <div class="modal fade" id="bookRoom-{{ r.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Edit Room</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                              {% csrf_token %} 
+                              <input type="hidden" name="roomID" value="{{ r.id }}" id="roomID"></input>
+                              <label class="col-form-label"  for="name">Name</label>
+                              <input type="text" class="form-control" value="{{ r.name }}" name="roomName" required></input>
+                              <label class="col-form-label"  for="name">Type</label>
+                              <input type="text" class="form-control" value="{{ r.type }}" name="roomType" required></input>
+                              <label class="col-form-label"  for="name">Capacity</label>
+                              <input type="number" class="form-control" value="{{ r.capacity }}" name="roomCapacity" required></input>
+                              <label class="col-form-label"  for="name">Morning Fee</label>
+                              <input type="number" class="form-control" value="{{ r.morningFee }}" name="roomMFee" required></input>
+                              <label class="col-form-label"  for="name">Afternoon Fee</label>
+                              <input type="number" class="form-control" value="{{ r.afternoonFee }}" name="roomAFee" required></input>
+                              <label class="col-form-label"  for="name">Evening Fee</label>
+                              <input type="number" class="form-control" value="{{ r.eveningFee }}" name="roomEFee" required></input>
+                              </input>
+                          </div>
+                        </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" name="editBtn">Save Changes</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              
-              <div class="col-md-3 border">
-                <div class="d-grid">
-                  {% if user.is_superuser %}
-                  <button class="btn btn-danger btn-block" data-bs-toggle="modal" data-bs-target="#deleteRoom-{{ r.id }}">Delete</button>
-                  {% endif %}
-                </div>    
-              </div>
-              <i data-bs-toggle="modal" data-bs-target="#editRoom-{{ r.id }}" 
-              class="bi bi-pencil-square position-absolute bottom-0 end-0 h5 me-2"></i>
-            </div>
+
+                {% endfor %} 
+              </tbody>
+            </table>
           </div>
-            <!-- Delete Modal -->
-            <div class="modal fade" id="deleteRoom-{{ r.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete Room</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form method="POST">
-                      {% csrf_token %}
-                      <input type="text" name="roomID" value = {{ r.id }} id = "roomID"hidden>
-                    Are you sure you want to delete this conference room?
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" name = "deleteBtn">Delete</button>
-                  </div>
-                </form>
-                </div>
-              </div>
-            </div>
-
-            <!-- Edit Modal -->
-            <div class="modal fade" id="editRoom-{{ r.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Room</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form method="POST">
-                      {% csrf_token %}
-                      <div class="form-group">
-
-                        <input type="text" name="roomID" value = {{ r.id }} id = "roomID" hidden>
-                        <label class="col-form-label"  for="name">Name</label>
-                        <input type="text" class="form-control" value="{{ r.name }}" name="roomName" required></input>
-                        <label class="col-form-label"  for="name">Type</label>
-                        <select class="form-select" name="roomType" id="roomType">
-                        {% for p in type %}
-                          <option value='{{ p.id }}' {% if p.id == r.type.id%} selected {% endif %}>{{ p.type }}</option>
-                        {% endfor %}
-                        </select>
-                        <label class="col-form-label"  for="name">Capacity</label>
-                        <input type="number" class="form-control" value="{{ r.capacity }}" name="roomCapacity" required></input>
-                        </input>
-                    </div>
-                  </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary" name="editBtn">Save Changes</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-
-            <!-- Book Room Modal -->
-            <div class="modal fade" id="bookRoom-{{ r.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Room</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form method="POST">
-                      {% csrf_token %}
-                      <div class="form-group">
-                        {% csrf_token %} 
-                        <input type="hidden" name="roomID" value="{{ r.id }}" id="roomID"></input>
-                        <label class="col-form-label"  for="name">Name</label>
-                        <input type="text" class="form-control" value="{{ r.name }}" name="roomName" required></input>
-                        <label class="col-form-label"  for="name">Type</label>
-                        <input type="text" class="form-control" value="{{ r.type }}" name="roomType" required></input>
-                        <label class="col-form-label"  for="name">Capacity</label>
-                        <input type="number" class="form-control" value="{{ r.capacity }}" name="roomCapacity" required></input>
-                        <label class="col-form-label"  for="name">Morning Fee</label>
-                        <input type="number" class="form-control" value="{{ r.morningFee }}" name="roomMFee" required></input>
-                        <label class="col-form-label"  for="name">Afternoon Fee</label>
-                        <input type="number" class="form-control" value="{{ r.afternoonFee }}" name="roomAFee" required></input>
-                        <label class="col-form-label"  for="name">Evening Fee</label>
-                        <input type="number" class="form-control" value="{{ r.eveningFee }}" name="roomEFee" required></input>
-                        </input>
-                    </div>
-                  </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary" name="editBtn">Save Changes</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
         </div>
-      </div> 
-      {% endfor %} 
+      </div>
     </div>
-    
   </div>
-
 </main>
         <!--BODY-->
 {% include 'footer.html' %}

@@ -166,6 +166,7 @@ class UsersView(LoginRequiredMixin, View):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'New User registered successfully.')
 
         elif 'btnUpdate' in request.POST:
             user_id = request.POST.get('userId')
@@ -176,10 +177,12 @@ class UsersView(LoginRequiredMixin, View):
             User.objects.filter(id = user_id).update(
                     is_superuser = superuser_status, is_staff = staff_status, 
                     is_active = active_status)
+            messages.success(request, 'User successfully updated.')        
         
         elif 'btnDelete' in request.POST:
             user_id = request.POST.get('userId')
             User.objects.filter(id = user_id).delete()
+            messages.warning(request, 'User successfully deleted.')
 
         return redirect('users-view')
 
