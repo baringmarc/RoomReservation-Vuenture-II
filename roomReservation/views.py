@@ -87,7 +87,7 @@ class ReservationsView(LoginRequiredMixin, View):
             if not form4['morning'] and not form4['afternoon'] and not form4['evening']:
                 messages.error(request, 'Please select at least one timeslot.')
                 return redirect('reservations-view')
-
+            
             elif checkValidEdit(form3, form4):
                 reserveID = form3['reserveID']
                 reserveRoom = form3['roomID']
@@ -110,6 +110,8 @@ class ReservationsView(LoginRequiredMixin, View):
                     applicant=reserveApplicant, fee=fee_new)
 
                 messages.success(request, 'Reservation successfully updated.')
+
+
                 return redirect('reservations-view')    
     
         messages.error(request, 'Reservation not approved. Conflict with existing reservation.')
