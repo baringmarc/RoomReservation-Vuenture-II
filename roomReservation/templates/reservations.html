@@ -21,11 +21,6 @@
       </div>    
       
     </div>
-    
-    <!-- ikaw nay bahala ani guro jevic haha -->
-    <p>Reservations for this week: {{ thisWeek }}</p>
-    <p>Reservations for this day: {{ thisDay }}</p> 
-    <p>Reservations for this month: {{ thisMonth }}</p> 
 
 
 
@@ -77,6 +72,17 @@
               </tr>
             </thead>
             <tbody>
+
+              <div class="card border-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">Reservations for this</div>
+                <div class="card-body text-primary">
+                  <div class="d-flex flex-row justify-content-between">
+                  <div class="flex-row"><h5 class="card-title">Day:</h5> <p class="card-text">{{ thisDay }}</p></div>
+                  <div class="flex-row"><h5 class="card-title">Week:</h5> <p class="card-text">{{ thisWeek }}</p></div>
+                  <div class="flex-row"><h5 class="card-title">Month:</h5> <p class="card-text">{{ thisMonth }}</p></div>
+                </div>
+                </div>
+              </div>
         {% for reserve in reservations %}
           {% if reserve.dateOfUse >= today %}
 

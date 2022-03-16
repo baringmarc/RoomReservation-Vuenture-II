@@ -43,7 +43,7 @@ class TimeSlot(models.Model):
         if self.evening == True:
             name += "Evening"
             
-        return self.name
+        return name
 
 class Reservation(models.Model):
     room = models.ForeignKey(ConferenceRoom, on_delete = models.CASCADE, related_name= "room")

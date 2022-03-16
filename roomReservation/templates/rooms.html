@@ -68,16 +68,14 @@
               </thead>
               <tbody>
                   <!-- trial -->
-                  <div class="container-fluid card">
-                        <div class="d-flex flex-row px-2">
-                          
-                          <h5 class="card-title pe-3" style="font-weight:bold;" >
-                            {{mostBooked.name}}
-                            <span class="badge bg-secondary">{{mostBooked.type.type}}</span>
-                            <span class="badge bg-secondary">{{maxval}}</span>
-                          </h5>
-                        </div>
-                      </div>
+                  
+                  <div class="card border-primary mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Most Booked Room</div>
+                    <div class="card-body text-primary">
+                      <h5 class="card-title">{{mostBooked.name}}</h5>
+                      <p class="card-text">at {{maxval}} reservations</p>
+                    </div>
+                  </div>
                         
                     <!-- trial -->
                 
