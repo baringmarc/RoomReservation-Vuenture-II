@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 import datetime
 from .reserve import *
 from django.contrib import messages
+from django.db.models import Count
 
 # Create your views here.
 
@@ -33,10 +34,16 @@ class ReservationsView(LoginRequiredMixin, View):
         applicants = Applicant.objects.all()
         rooms = ConferenceRoom.objects.all()
         today = datetime.date.today()
+        week = datetime.date.today().isocalendar()[1]
+        month = datetime.date.today().month
+        
+        thisWeek = Reservation.objects.filter(dateOfUse__week = week).count()
+        thisDay = Reservation.objects.filter(dateOfUse = today).count()
+        thisMonth = Reservation.objects.filter(dateOfUse__month = month).count()
 
         context = {'reservations': reservations,
             'form': form, 'form2': form2, 'applicants': applicants,
-            'rooms': rooms, 'today': today}
+            'rooms': rooms, 'today': today, 'thisWeek' : thisWeek, 'thisDay' : thisDay, 'thisMonth': thisMonth}
         return render(request, 'reservations.html', context)
     
     def post(self, request):
@@ -124,9 +131,13 @@ class RoomsView(LoginRequiredMixin, View):
         form = ConferenceRoomForm(request.POST)
         roomPrice = RoomPrice.objects.all()
         conferenceRooms = ConferenceRoom.objects.all()
-        
+
+        query_result = Reservation.objects.values('room').order_by('room').annotate(conference_count=Count('room'))
+        maxval = max(query_result, key=lambda x:x['conference_count'])
+        mostBooked = ConferenceRoom.objects.get(pk=maxval['room'])
+
         context = {'form': form, 'type': roomPrice,
-                    'rooms': conferenceRooms}
+                    'rooms': conferenceRooms, 'mostBooked': mostBooked, 'maxval': maxval['conference_count']}
         return render(request, 'rooms.html', context)
     
     def post(self, request):
