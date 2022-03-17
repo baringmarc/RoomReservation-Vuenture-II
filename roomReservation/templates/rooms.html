@@ -68,15 +68,17 @@
               </thead>
               <tbody>
                   <!-- trial -->
-                  
-                  <div class="card border-primary mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Most Booked Room</div>
-                    <div class="card-body text-primary">
-                      <h5 class="card-title">{{mostBooked.name}}</h5>
-                      <p class="card-text">at {{maxval}} reservations</p>
+                  {% if mostBooked %}
+                  <div class="d-flex">
+                    <div class="card border-primary mb-3">
+                      <div class="card-header">Most Booked Room</div>
+                      <div class="card-body text-primary">
+                        <h5 class="card-title"><a href="{% url 'ledger-view' mostBooked.id %}">{{mostBooked.name}}</a></h5> 
+                        <p class="card-text">at <strong>{{booked}}</strong> reservations</p>
+                      </div>
                     </div>
                   </div>
-                        
+                  {% endif %}   
                     <!-- trial -->
                 
                 {% for r in rooms %}

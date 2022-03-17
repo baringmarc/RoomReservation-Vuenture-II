@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 import datetime
 from .reserve import *
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Max, F
 
 # Create your views here.
 
@@ -33,6 +33,7 @@ class ReservationsView(LoginRequiredMixin, View):
         reservations = Reservation.objects.all()
         applicants = Applicant.objects.all()
         rooms = ConferenceRoom.objects.all()
+
         today = datetime.date.today()
         week = datetime.date.today().isocalendar()[1]
         month = datetime.date.today().month
@@ -132,12 +133,17 @@ class RoomsView(LoginRequiredMixin, View):
         roomPrice = RoomPrice.objects.all()
         conferenceRooms = ConferenceRoom.objects.all()
 
-        query_result = Reservation.objects.values('room').order_by('room').annotate(conference_count=Count('room'))
-        maxval = max(query_result, key=lambda x:x['conference_count'])
-        mostBooked = ConferenceRoom.objects.get(pk=maxval['room'])
-
-        context = {'form': form, 'type': roomPrice,
-                    'rooms': conferenceRooms, 'mostBooked': mostBooked, 'maxval': maxval['conference_count']}
+        if conferenceRooms:
+            rooms = Reservation.objects.values('room').annotate(booked=Count('room'))
+            maxbooked = max(room['booked'] for room in rooms)
+            getMaxRooms = rooms.filter(booked=maxbooked)
+            maxRoom = getMaxRooms[0]['room']
+            mostBookedRoom = ConferenceRoom.objects.get(pk=maxRoom)
+            context = {'form': form, 'type': roomPrice, 
+            'rooms': conferenceRooms, 'mostBooked': mostBookedRoom,
+            'booked':maxbooked}
+        else:
+            context = {'form': form, 'type': roomPrice, 'rooms': conferenceRooms}
         return render(request, 'rooms.html', context)
     
     def post(self, request):
@@ -269,6 +275,6 @@ class RoomLedgerView(View):
     def get(self, request, id):
         rID = id
         reservation = Reservation.objects.filter(room__id = rID).all()
-        print(rID)
-        context = { 'reservation': reservation}
+        room = ConferenceRoom.objects.get(room = rID)
+        context = {'reservation': reservation, 'room': room}
         return render(request, 'roomLedger.html', context)
