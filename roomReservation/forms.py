@@ -16,9 +16,10 @@ class ApplicantForm(forms.ModelForm):
 
 class ConferenceRoomForm(forms.ModelForm):
     type = forms.ModelChoiceField(queryset=RoomPrice.objects.all())
+    
     class Meta:
         model = ConferenceRoom
-        fields = ['name', 'type', 'capacity']
+        fields = ['name', 'type', 'capacity', 'image']
 
     # def __init__(self, *args, **kwargs):
     #     super(ConferenceRoomForm, self).__init__(*args, **kwargs)

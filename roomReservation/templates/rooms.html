@@ -32,7 +32,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-          <form method="POST">
+          <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{form|crispy}}
             
@@ -88,7 +88,7 @@
                     <div class="roomItem card mb-3 border-3 rounded p-1" >
                       <div class="d-flex flex-row align-items-center">
                         <div class="col-md-4">
-                          <img src="{% static 'images/room1.jpg'%}" class="img-fluid rounded-pill">
+                          <img src="{{r.get_image}}" class="img-fluid rounded-pill">
                         </div>
                         <div class="col-md-5">
                           <div class="card-body">
@@ -178,7 +178,7 @@
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                          <form method="POST">
+                          <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
 
@@ -193,6 +193,9 @@
                               </select>
                               <label class="col-form-label"  for="name">Capacity</label>
                               <input type="number" class="form-control" value="{{ r.capacity }}" name="roomCapacity" required></input>
+                              </input>
+                              <label class="col-form-label"  for="name">Image</label>
+                              <input type="file" class="form-control" name="image"></input>
                               </input>
                           </div>
                         </div>

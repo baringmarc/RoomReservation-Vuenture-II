@@ -34,17 +34,23 @@ class ReservationsView(LoginRequiredMixin, View):
         applicants = Applicant.objects.all()
         rooms = ConferenceRoom.objects.all()
 
-        today = datetime.date.today()
-        week = datetime.date.today().isocalendar()[1]
-        month = datetime.date.today().month
-        
-        thisWeek = Reservation.objects.filter(dateOfUse__week = week).count()
-        thisDay = Reservation.objects.filter(dateOfUse = today).count()
-        thisMonth = Reservation.objects.filter(dateOfUse__month = month).count()
+        if reservations:
+            today = datetime.date.today()
+            week = datetime.date.today().isocalendar()[1]
+            month = datetime.date.today().month
+            
+            thisWeek = Reservation.objects.filter(dateOfUse__week = week).count()
+            thisDay = Reservation.objects.filter(dateOfUse = today).count()
+            thisMonth = Reservation.objects.filter(dateOfUse__month = month).count()
 
-        context = {'reservations': reservations,
-            'form': form, 'form2': form2, 'applicants': applicants,
-            'rooms': rooms, 'today': today, 'thisWeek' : thisWeek, 'thisDay' : thisDay, 'thisMonth': thisMonth}
+            context = {'reservations': reservations,
+                'form': form, 'form2': form2, 'applicants': applicants,
+                'rooms': rooms, 'today': today, 'thisWeek' : thisWeek, 'thisDay' : thisDay, 'thisMonth': thisMonth}
+        else:
+            context = {'reservations': reservations,
+                'form': form, 'form2': form2, 'applicants': applicants,
+                'rooms': rooms,}
+        
         return render(request, 'reservations.html', context)
     
     def post(self, request):
@@ -158,15 +164,18 @@ class RoomsView(LoginRequiredMixin, View):
             room_name = request.POST.get('roomName')
             room_type = request.POST.get('roomType')
             room_capacity = request.POST.get('roomCapacity')
+            room_image = request.FILES.get('image')
 
+            print(room_image)
+            
             ConferenceRoom.objects.filter(id=roomid).update(
                 name = room_name, type = room_type, 
-                capacity = room_capacity) 
+                capacity = room_capacity, image = room_image) 
             messages.success(request, 'Room successfully updated.')
             return redirect('rooms-view')
 
         else:
-            form = ConferenceRoomForm(request.POST) 
+            form = ConferenceRoomForm(request.POST, request.FILES) 
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Room successfully added.')
