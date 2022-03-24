@@ -284,6 +284,6 @@ class RoomLedgerView(View):
     def get(self, request, id):
         rID = id
         reservation = Reservation.objects.filter(room__id = rID).all()
-        room = ConferenceRoom.objects.get(room = rID)
+        room = ConferenceRoom.objects.filter(room = rID) #debugged by jevic djanGod
         context = {'reservation': reservation, 'room': room}
         return render(request, 'roomLedger.html', context)
