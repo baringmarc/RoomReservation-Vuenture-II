@@ -15,9 +15,11 @@
     <div class="card-header flex-wrap flex-md-nowrap border-bottom bg-dark">
       <div class="d-flex flex-row align-items-center justify-content-start">
         <h2 class="text-light" style="font-weight: bold;">
-          {{room.name}}
+          {% for res in reservation %}
+          {{res.room.name}}
         </h2> 
         <h5><span class="badge rounded bg-secondary ms-2">{{room.type}}</span></h5>
+        {% endfor %}
       </div>    
       
     </div>
