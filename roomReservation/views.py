@@ -160,21 +160,16 @@ class RoomsView(LoginRequiredMixin, View):
             return redirect('rooms-view')
         
         elif 'editBtn' in request.POST:
-            roomid = request.POST.get('roomID')
-            room_name = request.POST.get('roomName')
-            room_type = request.POST.get('roomType')
-            room_capacity = request.POST.get('roomCapacity')
-            room_image = request.FILES.get('image')
-
-            print(room_image)
-            
-            ConferenceRoom.objects.filter(id=roomid).update(
-                name = room_name, type = room_type, 
-                capacity = room_capacity, image = room_image) 
+            roomid = request.POST.get('roomID') 
+            room = ConferenceRoom.objects.get(id = roomid)
+            editForm = ConferenceRoomForm(request.POST, request.FILES, instance=room)
+            if editForm.is_valid():
+                editForm.save()
             messages.success(request, 'Room successfully updated.')
             return redirect('rooms-view')
 
         else:
+            
             form = ConferenceRoomForm(request.POST, request.FILES) 
             if form.is_valid():
                 form.save()
@@ -249,6 +244,7 @@ class ApplicantsView(LoginRequiredMixin, View):
 class RoomPriceView(LoginRequiredMixin, View):
     def get(self, request):
         form = RoomPriceForm()
+        
         roomPrice = RoomPrice.objects.all()
         return render(request, 'prices.html', { 'prices': roomPrice, 'form': form } )
     
