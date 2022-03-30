@@ -169,24 +169,30 @@ class RoomsView(LoginRequiredMixin, View):
             room_type = request.POST.get('roomType')
             room_capacity = request.POST.get('roomCapacity')
 
-            ConferenceRoom.objects.filter(id=roomid).update(
-                name = room_name, type = room_type, 
-                capacity = room_capacity) 
+            if checkRoomName(room_name) or checkSameRoomName(room_name, roomid):
+                ConferenceRoom.objects.filter(id=roomid).update(
+                    name = room_name, type = room_type, 
+                    capacity = room_capacity) 
 
-            if editForm.is_valid():
-                editForm.save()
-            messages.success(request, 'Room successfully updated.')
+                if editForm['image'] != None:
+                    if editForm.is_valid():
+                        editForm.save()
+                messages.success(request, 'Room successfully updated.')
+            else:
+                messages.error(request, 'Room name is already in use. Please try again with another name.')
             return redirect('rooms-view')
 
         else:
             
-            form = ConferenceRoomForm(request.POST, request.FILES) 
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'Room successfully added.')
-                return redirect('rooms-view')
+            form = ConferenceRoomForm(request.POST, request.FILES)
+            if checkRoomName(form['name'].value()):
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Room successfully added.')
+            else:
+                messages.error(request, 'Room name is already in use. Please try again with another name.')
+            return redirect('rooms-view')
         
-        return render(request, 'rooms.html', {'form': form})
 
 class UsersView(LoginRequiredMixin, View):
     def get(self, request):
@@ -236,19 +242,26 @@ class ApplicantsView(LoginRequiredMixin, View):
             address = request.POST.get('address')
             phone_number = request.POST.get('phoneNumber')
 
-            Applicant.objects.filter(id = applicant_id).update(
-                    firstName = first_name, lastName = last_name, 
-                    address = address, phoneNumber = phone_number)
-            messages.success(request, 'Applicant successfuly updated.')
+            if checkApplicantName(first_name, last_name) or checkSameApplicantName(first_name, last_name, applicant_id):
+                Applicant.objects.filter(id = applicant_id).update(
+                        firstName = first_name, lastName = last_name, 
+                        address = address, phoneNumber = phone_number)
+                messages.success(request, 'Applicant successfuly updated.')
+            else:
+                messages.error(request, 'Applicant name is already in use. Please try again with another name.')
         
         elif 'btnDelete' in request.POST:
             applicant_id = request.POST.get('applicantId')
             Applicant.objects.filter(id = applicant_id).delete()
             messages.warning(request, 'Applicant deleted.')
 
-        elif form.is_valid():
-            form.save()
-            messages.success(request, 'Applicant successfully added.')
+        else:
+            if checkApplicantName(form['firstName'].value(), form['lastName'].value()):
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Applicant successfully added.')
+            else:
+                messages.error(request, 'Applicant name is already in use. Please try again with another name.')
         return redirect('applicants-view')
 
 class RoomPriceView(LoginRequiredMixin, View):
@@ -269,20 +282,26 @@ class RoomPriceView(LoginRequiredMixin, View):
             pAfternoon = request.POST.get('priceA')
             pEvening = request.POST.get('priceE')
             
-            RoomPrice.objects.filter(id = price_id).update(
-                type = price_type, morning = pMorning,
-                afternoon = pAfternoon, evening = pEvening)
-
-            messages.success(request, 'Room price type successfully updated.')
+            if checkRoomType(price_type) or checkSameRoomType(price_type, price_id):
+                RoomPrice.objects.filter(id = price_id).update(
+                    type = price_type, morning = pMorning,
+                    afternoon = pAfternoon, evening = pEvening)
+                messages.success(request, 'Room price type successfully updated.')
+            else:
+                messages.error(request, 'Room type name is already in use. Please try again with another name.')
 
         elif 'btnDelete' in request.POST:
             price_id = request.POST.get('priceId')
             RoomPrice.objects.filter(id = price_id).delete()
             messages.warning(request, 'Room price type removed.')
 
-        elif form.is_valid():
-            form.save()
-            messages.success(request, 'Room price type successfully added.')
+        elif 'addBtn' in request.POST:
+            if form.is_valid():
+                if checkRoomType(form['type'].value()):
+                    form.save()
+                    messages.success(request, 'Room price type successfully added.')
+                else:
+                    messages.error(request, 'Room type name is already in use. Please try again with another name.')
         return redirect('price-view')
 
 class RoomLedgerView(View):
