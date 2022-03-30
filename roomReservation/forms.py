@@ -27,6 +27,13 @@ class ConferenceRoomForm(forms.ModelForm):
     #     self.fields['type'].required = True
     #     self.fields['capacity'].required = True
 
+class EditRoomForm(forms.ModelForm):
+    
+    class Meta:
+        model = ConferenceRoom
+        fields = ['image']
+        exclude = ['name', 'type', 'capacity']
+
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
     first_name = forms.CharField(max_length=40)

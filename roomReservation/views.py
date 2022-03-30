@@ -135,7 +135,8 @@ class ReservationsView(LoginRequiredMixin, View):
 
 class RoomsView(LoginRequiredMixin, View):
     def get(self, request):
-        form = ConferenceRoomForm(request.POST)
+        form = ConferenceRoomForm()
+        editForm = EditRoomForm()
         roomPrice = RoomPrice.objects.all()
         conferenceRooms = ConferenceRoom.objects.all()
 
@@ -147,9 +148,9 @@ class RoomsView(LoginRequiredMixin, View):
             mostBookedRoom = ConferenceRoom.objects.get(pk=maxRoom)
             context = {'form': form, 'type': roomPrice, 
             'rooms': conferenceRooms, 'mostBooked': mostBookedRoom,
-            'booked':maxbooked}
+            'booked':maxbooked, 'editForm': editForm}
         else:
-            context = {'form': form, 'type': roomPrice, 'rooms': conferenceRooms}
+            context = {'form': form, 'type': roomPrice, 'rooms': conferenceRooms, 'editForm': editForm}
         return render(request, 'rooms.html', context)
     
     def post(self, request):
@@ -162,7 +163,16 @@ class RoomsView(LoginRequiredMixin, View):
         elif 'editBtn' in request.POST:
             roomid = request.POST.get('roomID') 
             room = ConferenceRoom.objects.get(id = roomid)
-            editForm = ConferenceRoomForm(request.POST, request.FILES, instance=room)
+            editForm = EditRoomForm(request.POST, request.FILES, instance=room)
+
+            room_name = request.POST.get('roomName')
+            room_type = request.POST.get('roomType')
+            room_capacity = request.POST.get('roomCapacity')
+
+            ConferenceRoom.objects.filter(id=roomid).update(
+                name = room_name, type = room_type, 
+                capacity = room_capacity) 
+
             if editForm.is_valid():
                 editForm.save()
             messages.success(request, 'Room successfully updated.')

@@ -181,7 +181,29 @@
                           <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
                             <input type="text" name="roomID" value = {{ r.id }} id = "roomID"hidden>
-                            {{form|crispy}}
+                              <div class="form-group">
+
+                                <input type="text" name="roomID" value = {{ r.id }} id = "roomID" hidden>
+                                <label class="col-form-label"  for="name">Name</label>
+                                <input type="text" class="form-control" value="{{ r.name }}" name="roomName" required></input>
+                                <label class="col-form-label"  for="name">Type</label>
+                                <select class="form-select" name="roomType" id="roomType">
+                                {% for p in type %}
+                                  <option value='{{ p.id }}' {% if p.id == r.type.id%} selected {% endif %}>{{ p.type }}</option>
+                                {% endfor %}
+                                </select>
+                                <label class="col-form-label"  for="name">Capacity</label>
+                                <input type="number" class="form-control" value="{{ r.capacity }}" name="roomCapacity" required></input>
+                                </input>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" value="" id="editImage" onclick="editIMG()">
+                                </div>
+                                <div id = 'imgform'>
+                                  {{editForm|crispy}}
+                              </div>
+                            </div>
+                            
+                            
                         </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -239,6 +261,19 @@
     </div>
   </div>
 </main>
+
+<script>  
+  function editIMG()
+  {
+    if (document.getElementById('editImage').checked) 
+    {
+        document.getElementById('imgform').style.visibility='visible';
+    } else {
+        document.getElementById('imgform').style.visibility='hidden';
+    }
+  }
+
+</script>
         <!--BODY-->
 {% include 'footer.html' %}
 <style>
@@ -257,4 +292,6 @@
 }
 </style>
 {% endblock %}
+
+
 
