@@ -1,0 +1,54 @@
+{% load static %}
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-4 col-lg-2 d-md-block bg-light sidebar collapse">
+          <div class="d-flex pt-3 position-sticky top-0 start-0" style="font-weight: bold;">
+            <ul class="nav flex-column">
+              <li class="nav-item navitem room">
+                <a class="nav-link" href="{% url 'rooms-view' %}">
+                  <span data-feather="home"></span>
+                  Conference Rooms
+                </a>
+              </li>
+              {% if user.is_authenticated and user.is_superuser%}
+              <li class="nav-item navitem price">
+                <a class="nav-link" href="{% url 'price-view' %}">
+                  <span data-feather="home"></span>
+                  Room Prices
+                </a>
+              </li>
+              {% endif %}
+              <li class="nav-item navitem reserve">
+                <a class="nav-link" href="{% url 'reservations-view' %}">
+                  <span data-feather="file"></span>
+                  Reservations
+                </a>
+              </li>
+              <li class="nav-item navitem applicant">
+                <a class="nav-link" href="{% url 'applicants-view' %}">
+                  <span data-feather="file"></span>
+                  Applicants
+                </a>
+              </li>
+              {% if user.is_authenticated and user.is_superuser%}
+              <li class="nav-item navitem users">
+                <a class="nav-link" href="{% url 'users-view' %}">
+                  <span data-feather="file"></span>
+                  Users
+                </a>
+              </li>
+              {% endif %}
+          </div>
+        </nav>
+
+
+<style>
+  .navitem:hover {
+    background-color: #ced6e0;
+  }
+</style>
+      
+        
+
+        

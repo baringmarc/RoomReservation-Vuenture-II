@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+<div class="container col-xl-10 col-xxl-8 px-4">
+    <div class="row align-items-center g-lg-5 py-4">
+      <div class="col-lg-7 text-center text-lg-start">
+		<img class="img-fluid" src="{% static 'images/logo_w_name.png' %}" style="width: 83%">
+      </div>
+      <div class="col-md-10 mx-auto col-lg-5">
+        <form class="p-4 p-md-5 border rounded-3 bg-light" method="post">
+			<h2><p class="text-center" style="font-weight: bold;">Login</p></h2>
+			<p class="text-center text-muted"><i>For employees only! </i></p>
+			{% csrf_token %}
+			{{form|crispy}}
+			<div class="d-grid mt-3">
+				<input class="btn btn-lg btn-success btn-block " type="submit" value="Login">
+			</div>
+        </form>
+      </div>
+    </div>
+</div>
+
+<style>
+	body {
+		background-image: url("{% static 'images/rooms.jpg' %}");
+		background-position: fixed;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+</style>	
+{% endblock %}

@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#l(n%z*0u47z#z-==p4uy00x!=628qm1zwxfq3^4#z801h@owm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -78,15 +78,14 @@ WSGI_APPLICATION = 'ConferenceRoomReservation.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {        
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'it342-dbjmj',
-        'USER': 'baringmarc',
-        'PASSWORD': 'Admin12345',
-        'HOST': 'it342-dbjmj.postgres.database.azure.com',
-        'PORT': '5432',
-        'OPTIONS': {"sslmode": 'required'},
-        # 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db_jmjconferencerooms',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'POST': '3306',
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
     }
 }
 
@@ -128,11 +127,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
-# STATICFILES_DIRS = [
-#     BASE_DIR / "core/static/",
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [
+    BASE_DIR / "core/static/",
     
-# ]
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'

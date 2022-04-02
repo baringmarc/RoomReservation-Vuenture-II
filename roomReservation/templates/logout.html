@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} JMJ Conference Rooms {% endblock %}
+
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<div class="position-absolute top-50 start-50 translate-middle">
+    <div class="loginbox card bg-dark bg-gradient">
+		<div class="card-body m-5">
+			<div>
+				
+			</div><br>
+			<div class="d-flex flex-column text-light">
+				<!-- <div class="p-2">
+					<h3 class="text-center" style="font-weight: bold;">LOGIN</h3>
+				</div> -->
+				<div class="p-2">
+				<p>You are now logged out! Click the button below to log in</p>
+                <a class = "btn btn-lg btn-success btn-block position-absolute top-100 start-50 translate-middle" href = "{% url 'login-view' %}">Log in</a>
+						
+						
+						
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.loginbox{
+		border-radius: 25%;
+	}
+	body {
+		background-image: url("{% static 'images/rooms.jpg' %}");
+		background-position: fixed;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+</style>	
+{% endblock %}

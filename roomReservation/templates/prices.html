@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} JMJ Conference Rooms {% endblock %}
+
+{% block content %}
+  
+{% include 'sideMenu.html' %}
+    
+{% load crispy_forms_filters %}   
+<!-- BODY -->
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="card">
+    <div class="card-header flex-wrap flex-md-nowrap border-bottom bg-dark">
+      <div class="d-flex flex-row align-items-center justify-content-between">
+        <h2 class="text-light" style="font-weight: bold;">Room Prices</h2>
+          <div>
+            <button type='submit' name='addBtn' class='btn btn-success' data-bs-toggle="modal" data-bs-target="#addPriceModal">Add Type</button>
+          </div>
+      </div>    
+      
+    </div>
+    <!-- Add Room Modal -->
+    <div class="modal fade" id="addPriceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add a Room Type</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+          <form method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id = "addBtn" name = "addBtn">Add</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="card-body border">
+      
+      {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %} alert-danger {% else %} alert-{{ message.tags }} {% endif %}">
+            {{ message }}
+        </div>
+      {% endfor %}
+      {% endif %}
+        <div class="table-responsive">
+          <table class="table table-striped table-sm" id="table_id">
+            <thead>
+              <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Morning Fee</th>
+                <th scope="col">Afternoon Fee</th>
+                <th scope="col">Evening Fee</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for price in prices %}
+              <tr>
+                <td><span class="badge rounded bg-secondary">{{ price.type}}</span></td>
+                <td><span class="badge rounded-pill bg-success">{{ price.morning|floatformat:2 }}</span></td>
+                <td><span class="badge rounded-pill bg-danger">{{ price.afternoon|floatformat:2 }}</span></td>
+                <td><span class="badge rounded-pill bg-primary">{{ price.evening|floatformat:2 }}</span></td>
+                <td>
+                   <div class="btn-group">
+                      <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updatePrice-{{ price.id }}"> Update </button>
+                      <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePrice-{{ price.id }}"> Delete </button>
+                    </div>
+                </td>
+              </tr>
+  
+            <!--UPDATE MODAL-->
+            <div class="modal fade" id="updatePrice-{{ price.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog  modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Room Type</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form class="form" method="POST">
+                        <div class="justify-content-around">
+                            <div class="form-group">
+                                {% csrf_token %}
+                               
+                                <input type="hidden" name="priceID" value="{{ price.id }}" id="roomID"></input>
+                                <label class="col-form-label"  for="type">Type</label>
+                                <input type="text" class="form-control" value="{{ price.type}}" name="priceType"  id="priceType" required></input>
+                                <label class="col-form-label"  for="name">Morning Fee</label>
+                                <input type="text" class="form-control" value="{{ price.morning }}" name="priceM"  id="priceM" required></input>
+                                <label class="col-form-label"  for="name">Afternoon Fee</label>
+                                <input type="number" class="form-control" value="{{ price.afternoon }}" name="priceA"  id="priceA" required></input>
+                                <label class="col-form-label"  for="name">Evening Fee</label>
+                                <input type="number" class="form-control" value="{{ price.evening }}" name="priceE"  name="priceE" required></input>
+                                </input>
+                               
+                            </div>
+                          </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" name="btnUpdate" class="btn btn-primary">Save changes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+      <!--END OF UPDATE MODAL-->
+        <!--DELETE MODAL-->
+    <div class="modal fade" id="deletePrice-{{ price.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Post</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+           <form method="POST">
+           {% csrf_token %} 
+           <input type="text" name="priceId" value = {{ price.id }} hidden>
+           <h3>Are you sure you want to delete?</h3>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" name="btnDelete" class="btn btn-danger">Yes</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+      <!--END OF DELETE MODAL-->
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div> 
+    </div>
+  </div>
+  
+</main>
+
+{% include 'footer.html' %}
+<!--BODY-->
+
+<style>
+  .card-img{
+    height: 176px;
+    width: 170px;
+  }
+  .price{
+    background-color: #dfe4ea;
+  }
+  .reserveItem:hover {
+    border-color: #feca57;
+  }
+</style>
+{% endblock %}
+
