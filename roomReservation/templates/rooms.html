@@ -139,8 +139,10 @@
                             {% endif %}
                           </div>    
                         </div>
+                        {% if user.is_superuser %}
                         <i data-bs-toggle="modal" data-bs-target="#editRoom-{{ r.id }}" 
                         class="bi bi-pencil-square position-absolute bottom-0 end-0 h5 me-2"></i>
+                        {% endif %}
                       </div>
                     </div>
                   </td>
