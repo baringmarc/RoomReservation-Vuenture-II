@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from .views import *
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index-view'),
@@ -15,4 +17,4 @@ urlpatterns = [
     path('applicants/', ApplicantsView.as_view(), name='applicants-view'),
     path('prices/', RoomPriceView.as_view(), name='price-view'),
     path('rooms/<int:id>/', RoomLedgerView.as_view(), name='ledger-view'),
-]   
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  

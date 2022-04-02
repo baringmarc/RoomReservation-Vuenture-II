@@ -163,7 +163,7 @@ class RoomsView(LoginRequiredMixin, View):
         elif 'editBtn' in request.POST:
             roomid = request.POST.get('roomID') 
             room = ConferenceRoom.objects.get(id = roomid)
-            editForm = EditRoomForm(request.POST, request.FILES, instance=room)
+            # editForm = EditRoomForm(request.POST, request.FILES, instance=room)
 
             room_name = request.POST.get('roomName')
             room_type = request.POST.get('roomType')
@@ -174,9 +174,9 @@ class RoomsView(LoginRequiredMixin, View):
                     name = room_name, type = room_type, 
                     capacity = room_capacity) 
 
-                if editForm['image'] != None:
-                    if editForm.is_valid():
-                        editForm.save()
+                # if editForm['image'] != None:
+                #     if editForm.is_valid():
+                #         editForm.save()
                 messages.success(request, 'Room successfully updated.')
             else:
                 messages.error(request, 'Room name is already in use. Please try again with another name.')

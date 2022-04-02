@@ -19,7 +19,7 @@ class ConferenceRoomForm(forms.ModelForm):
     
     class Meta:
         model = ConferenceRoom
-        fields = ['name', 'type', 'capacity', 'image']
+        fields = ['name', 'type', 'capacity']
 
     # def __init__(self, *args, **kwargs):
     #     super(ConferenceRoomForm, self).__init__(*args, **kwargs)

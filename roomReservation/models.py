@@ -24,9 +24,10 @@ class ConferenceRoom(models.Model):
     def get_absolute_url(self):
         return f'/{self.slug}/'
 
+    
     def get_image(self):
         if self.image:
-            return f'http://127.0.0.1:8000{self.image.url}'
+            return f'http://it342-dbjmj.postgres.database.azure.com{self.image.url}'
         else:
             return ''
 

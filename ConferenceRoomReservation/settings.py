@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#l(n%z*0u47z#z-==p4uy00x!=628qm1zwxfq3^4#z801h@owm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    "whitenoise.runserver_nostatic",
     'django.contrib.staticfiles',
     'roomReservation',
     'crispy_forms',
@@ -79,13 +80,14 @@ WSGI_APPLICATION = 'ConferenceRoomReservation.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_jmjconferencerooms',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'POST': '3306',
-        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'it342-dbjmj',
+        'USER': 'baringmarc@it342-dbjmj',
+        'PASSWORD': 'Admin12345',
+        'HOST': 'it342-dbjmj.postgres.database.azure.com',
+        'PORT': '5432',
+        'OPTIONS': {"sslmode": "require"}
+        # 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
     }
 }
 
@@ -127,14 +129,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [
-    BASE_DIR / "core/static/",
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# STATICFILES_DIRS = [
+#     BASE_DIR / "core/static/",
     
-]
+# ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_ROOT = BASE_DIR / '/media/'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -146,4 +151,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'rooms-view'
 LOGIN_URL = 'login-view'
 
-# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
