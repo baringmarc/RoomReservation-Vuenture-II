@@ -78,15 +78,14 @@ WSGI_APPLICATION = 'ConferenceRoomReservation.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {        
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'it342-dbjmj',
-        'USER': 'baringmarc',
-        'PASSWORD': 'Admin12345',
-        'HOST': 'it342-dbjmj.postgres.database.azure.com',
-        'PORT': '5432',
-        'OPTIONS': {"sslmode": 'required'},
-        # 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db_jmjconferencerooms',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'POST': '3306',
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
     }
 }
 
