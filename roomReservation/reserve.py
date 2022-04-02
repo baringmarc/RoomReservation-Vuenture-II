@@ -63,45 +63,4 @@ def calculateFee_2(form1, form2):
 
     return fee 
 
-def checkRoomName(roomName):
-    if ConferenceRoom.objects.filter(name=roomName).exists():
-        return False
-    else:
-        return True
-
-def checkSameRoomName(roomName, key):
-    room = ConferenceRoom.objects.filter(id=key).get()
-    if room.name == roomName:
-        return True
-    return False
-
-def checkApplicantName(firstname, lastname):
-    applicants = Applicant.objects.all()
-    for applicant in applicants:
-        if applicant.firstName == firstname and applicant.lastName == lastname:
-            return False
-            
-    return True
-
-def checkSameApplicantName(firstname, lastname, key):
-    applicant = Applicant.objects.filter(id=key).get()
-    if applicant.firstName == firstname and applicant.lastName == lastname:
-        return True
-    return False
-
-def checkRoomType(roomType):
-    if RoomPrice.objects.filter(type=roomType).exists():
-        return False
-    else:
-        return True
-
-def checkSameRoomType(roomType, key):
-    roomtype = RoomPrice.objects.filter(id=key).get()
-    if roomtype.type == roomType:
-        return True
-    return False
-    
-
-
-
         
